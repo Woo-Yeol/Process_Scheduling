@@ -1,24 +1,23 @@
-# Process_Scheduling
+# 💻 Process_Scheduling 
 
-## 제작자
-
+## 🛠 제작자
  - 17학번 임우열
  - 17학번 임지수
  - 17학번 이유호
  - 19학번 배수빈
 
-## Project Example
+## 🖥 Project Example
 
-## 구현 요소 - Process Scheduling
+## 💡 구현 요소 - Process Scheduling
 
 - FCFS(First Come First Service) : 
 - RR(Round-Robin) : 
 
-## 기술 스택
+## 🧱 기술 스택
 
 - Django
 
-## 사용법
+## 📖  사용법
 
 ### 1. 깃 클론
 
@@ -30,5 +29,5 @@
 - window : `source [가상환경 명]/Scripts/activate` / mac : `source [가상환경 명]/bin/activate`
 - `pip install -r requirements.txt`
 
-## 로컬 서버 실행
+## ⚙️ 로컬 서버 실행
 - `python manage.py runserver`
