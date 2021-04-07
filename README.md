@@ -10,12 +10,15 @@
 
 ## 💡 구현 요소 - Process Scheduling
 
-- FCFS(First Come First Service) : 
-- RR(Round-Robin) : 
+- FCFS(First Come First Service)
+- RR(Round-Robin)
+- SPN(Shortest Process Next)
+- SRTN(Shortest Remaining Time Next)
+- HRRN(High Response Ratio Next)
 
 ## 🧱 기술 스택
 
-- Django
+- Django/python
 
 ## 📖  사용법
 
