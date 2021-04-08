@@ -131,6 +131,4 @@ p = processor(processor_n, processList)
 while not p.isOver():
     p.progressProcessor()
 
-print(p)
-
 
