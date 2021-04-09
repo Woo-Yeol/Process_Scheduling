@@ -51,6 +51,8 @@ class process:
             return True
         else:
             return False
+    def setLeft_time(self):
+        self.left_time = self.time_limit
 
 class processor:
     def __init__(self,n,processList, TQ):           # 생성자
@@ -85,34 +87,31 @@ class processor:
             else : break
 
     def progressProcessor(self):
+
         self.readyQueue()
+        for i in range(self.size):
+            if self.processor[i] != None:
+                if self.processor[i].isTimeover():
+                    self.queue.enqueue(self.processor[i])
+                    self.processor[i] = None
+
         self.allocateProcess_FCFS()
 
         for pro in self.processor:
             if pro != None:
                 pro.curr_time -= 1
                 pro.left_time -= 1
-        
-        
-            # self.printState()
+
+        self.t += 1
 
         for i in range(self.size):
             if self.processor[i] != None:
                 if self.processor[i].isComplete():
-                    self.processor[i].tt = self.t - self.processor[i].at + 1
+                    self.processor[i].tt = self.t - self.processor[i].at
                     self.processor[i].wait_time = self.processor[i].tt - self.processor[i].bt
                     self.processor[i].ntt = self.processor[i].tt / self.processor[i].bt
                     # self.processor[i].curr_time = 0
                     self.processor[i] = None
-
-        for i in range(self.size):
-            if self.processor[i] != None:
-                if self.processor[i].isTimeover():
-                    self.queue.enqueue(self.processor[i])
-                    self.processor[i] = None
-                    
-        self.t += 1
-
 
     def isOver(self):
         r = True
