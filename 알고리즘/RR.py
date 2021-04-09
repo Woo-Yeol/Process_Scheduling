@@ -93,13 +93,13 @@ class processor:
                 pro.curr_time -= 1
                 pro.left_time -= 1
         
-        self.t += 1
+        
             # self.printState()
 
         for i in range(self.size):
             if self.processor[i] != None:
                 if self.processor[i].isComplete():
-                    self.processor[i].tt = self.t - self.processor[i].at
+                    self.processor[i].tt = self.t - self.processor[i].at + 1
                     self.processor[i].wait_time = self.processor[i].tt - self.processor[i].bt
                     self.processor[i].ntt = self.processor[i].tt / self.processor[i].bt
                     # self.processor[i].curr_time = 0
@@ -110,6 +110,8 @@ class processor:
                 if self.processor[i].isTimeover():
                     self.queue.enqueue(self.processor[i])
                     self.processor[i] = None
+                    
+        self.t += 1
 
 
     def isOver(self):
