@@ -109,7 +109,7 @@ class FCFS:
         for n in range(self.processor_n):
             self.processor_ls.append(Processor())
     
-    # SPN 멀티코어 프로세싱
+    # FCFS 멀티코어 프로세싱
     def mulitcore_processing(self):
         time = 0; terminate = 0
         while(terminate != self.process_n):
