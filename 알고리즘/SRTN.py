@@ -96,12 +96,12 @@ def running_process(i,time):
         processor_ls[i].process.rt -= 1
         # 프로세스 처리가 완료된 프로세스 상태 변경
         if processor_ls[i].process.rt == 0:
-                processor_ls[i].running = False
-                # process 정보 변경
-                modify_process(i,time)
-                # 프로세스 종료되면
-                print("time" + str(time) + str(processor_ls[i].process)+ " " )        
-                return 1
+            processor_ls[i].running = False
+            # process 정보 변경
+            modify_process(i,time)
+            # 프로세스 종료되면
+            print("time" + str(time) + str(processor_ls[i].process)+ " " )        
+            return 1
         print("time" + str(time) + str(processor_ls[i].process)+ " " )                
     return 0              
 # 프로세스 정보 수정하기
