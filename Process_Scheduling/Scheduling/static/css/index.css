@@ -1,0 +1,29 @@
+body{
+    text-align: center;
+    margin: 100px 80px;
+    padding: auto;
+}
+
+.main{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.main-up{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.row{
+    margin: auto;
+    padding: auto;
+}
+
+h2{
+    text-align: center;
+}
