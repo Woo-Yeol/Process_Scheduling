@@ -1,12 +1,22 @@
-class PriorityQueue():
-    def __init__(self): # 생성자
-        self.items = []
+# Python list를 이용한 PriorityQueue ADT 구현.
+class ReadyQueue:
+    # 생성자
+
+    # 비어있는지 확인
     def isEmpty(self) : return len(self.items) == 0
+    
+    # 큐의 크기 확인
     def size(self): return len(self.items)
+
+    # 큐 초기화
     def clear(self): self.items = []
+
+    # 큐 삽입
     def enqueue(self, item):    # 삽입 연산
         self.items.append(item)
-    def findMaxIndex(self):             # 최대 우선순위 항목의 인덱스 반환
+    
+    # 최대 우선순위 항목의 인덱스 반환
+    def findMaxIndex(self):            
         if self.isEmpty(): return None
         else:
             highest = 0                 # 0번을 최대라고 하고
@@ -14,121 +24,117 @@ class PriorityQueue():
                 if self.items[i].bt < self.items[highest].bt:   # Burst Time이 가장 낮으면 가장 높은 우선순위
                     highest = i         # 인덱스 갱신
             return highest
-    def dequeue(self):          # 삭제 연산
-        highest = self.findMaxIndex()
-        if highest is not None:
-            return self.items.pop(highest)
 
-    def nom_dequeue(self):              # 일반 큐에서 dequeue 연산
+    # 레디 큐 생성 연산
+    def readyQue(self,process_ls,time):
+        for process in process_ls:
+            if (process.at == time):
+                self.enqueue(process)
+
+class Nom_ReadyQueue(ReadyQueue):
+    def __init__(self):
+        self.items = []
+
+    def dequeue(self):
         if not self.isEmpty():
             return self.items.pop(0)
 
-    def peek(self):             # peek 연산
-        highest = self.findMaxIndex()
-        if highest is not None:
-            return self.items[highest]
+    def peek(self):
+        if not self.isEmpty():
+            return self.items[0]
 
-class process:
-    def __init__(self,at,bt):
-        self.at = at        # Arrival time
-        self.bt = bt        # Burst time
-        self.curr_time = bt  # 현재 처리 상태
-        self.wait_time = 0  # 대기 시간
-        self.tt = 0
-        self.ntt = 0
-        self.ratio = 0      # response ratio
+# Process Class Declair
+class Process:
+    def __init__(self,bt,at,n):
+        self.bt = int(bt)            # Process Burst Time
+        self.r_bt = int(bt)          # Process Burst Time 기억용
+        self.at = int(at)            # Process Arrive Time 
+        self.tt =  0                 # Process Turnaround Time   반납시간 - At
+        self.ntt = 0                 # Nomalized Turnaround Time TT/BT
+        self.wt = 0                  # Waiting Time              TT-BT
+        self.id = int(n+1)
 
-    def isComplete(self):   # 해당 프로세스 처리 완료 여부 조사
-        # if self.bt == self.curr_time: return True
-        if self.curr_time == 0 : return True
-        else: return False
+    def modify_process(self,time):
+        # 프로세서에서 처리가 완료된 프로세스 제거 및 프로세스 정보 설정
+        self.tt = time - self.at
+        self.ntt = round(self.tt / self.r_bt,2)
+        self.wt = self.tt - self.r_bt                    # processor의 process
 
+    def __str__(self):
+        return "#Process" + str(self.id) + " AT = " + str(self.at) + " BT = " + str(self.r_bt) + " TT = " + str(self.tt) + " NTT = " + str(self.ntt) + " WT = " + str(self.wt)
 
+# Processor Class Declair
+class Processor:
+    def __init__(self):
+        self.running = False
+        self.process = None
 
-class processor:
-    def __init__(self,n,processList):           # 생성자
-        self.t = 0                              #  프로그램 수행시간(상대적)
-        self.size = n                           # 프로세서 사이즈
-        self.processList = processList          # 처리해야할 프로세스 리스트
-        self.processor = [None] * self.size     # 현재 프로세서 상태 (None: 처리프로그램 없음, 프로세스: 해당 프로세스 처리중)
-        self.queue = PriorityQueue()            # 처리 받기를 대기중인 프로세스 큐
-        self.readied = []                       # 이미 쓰여진 프로세스 리스트
-        self.chart = [[] for _ in range(self.size)]    # 출력될 간트차트
-        self.done_process = [None] * len(processList)
+    # 프로세서에 프로세스 할당
+    def ready_to_running(self,readyQue):
+        if readyQue.isEmpty() != True:
+            if self.running == False:
+                self.process = readyQue.dequeue()
+                self.running = True
 
-    def isFirstEmpty(self):                     # 먼저 비어있는 프로세서를 반환 (없으면 -1)
-        for i in range(self.size):
-            if self.processor[i] == None:       # 처리 프로그램 없다면
-                return i                        # 해당 프로세서 인덱스 반환
-        return -1                               # 모든 프로세서가 프로세스를 처리중
+    def running_process(self,time):
+        if self.running == True:
+            print("time" + str(time) + str(self.process)+ " " )
+            self.process.bt -= 1
+            # 프로세스 처리가 완료된 프로세스 상태 변경
+            if self.process.bt == 0:
+                self.running = False
+                # process 정보 변경
+                self.process.modify_process(time)
+                self.process = None
+                # 프로세스 종료되면
+                return 1
+        return 0 
 
-    def readyQueue(self):
-        pl = len(self.processList)
-        for i in range(pl):
-            if self.processList[i].at == self.t:
-                self.queue.enqueue(self.processList[i])      # 현재 arrival time이라면
-                self.readied.append(self.processList[i])    # 큐로 삽입되어 할당받을 준비
+# FCFS Scheduling Class 생성
+class FCFS:
+    # 생성자
+    def __init__(self,input_value):
+        self.process_ls=[]
+        self.processor_ls=[]
+        self.readyQueue = Nom_ReadyQueue()
 
-    def allocateProcess_FCFS(self):
-        for _ in range(self.queue.size()):
-            idx = self.isFirstEmpty()
-            if idx != -1:
-                self.processor[idx] = self.queue.nom_dequeue()
-            else : break
+        self.process_n = int(input_value[0])
+        self.processor_n = int(input_value[1])
+        self.bt_ls = list(input_value[2])
+        self.at_ls = list(input_value[3])
 
-    def progressProcessor(self):
-        self.readyQueue()
-        self.allocateProcess_FCFS()
+        # 프로세스/프로세서 객체 생성
+        for n in range(self.process_n):
+            self.process_ls.append(Process(self.bt_ls[n],self.at_ls[n],n))
+        for n in range(self.processor_n):
+            self.processor_ls.append(Processor())
+    
+    # FCFS 멀티코어 프로세싱
+    def mulitcore_processing(self):
+        time = 0; terminate = 0
+        while(terminate != self.process_n):
+            self.readyQueue.readyQue(self.process_ls,time)
+            time += 1
+            for processor in self.processor_ls:
+                # 큐에 프로세스가 있다면 비어있는 프로세서에 할당
+                processor.ready_to_running(self.readyQueue)
+                # 프로세서에 있는 프로세스 처리하기
+                terminate += processor.running_process(time)
+        # 출력
+        for process in self.process_ls:
+            print(str(process))      
 
-        for pro in self.processor:
-            if pro != None:
-                pro.curr_time -= 1
-        
-        self.t += 1
-            # self.printState()
+# 공통 입력
+def input_func():
+    process_n = eval(input("#Process : "))
+    processor_n = eval(input("#Processor : "))
+    bt_ls = list(map(int,input("#Burst Time : ").split()))
+    at_ls = list(map(int,input("#Arrive Time : ").split()))
+    result = [process_n, processor_n, bt_ls, at_ls]
+    return result
 
-        for i in range(self.size):
-            if self.processor[i] != None:
-                if self.processor[i].isComplete():
-                    self.processor[i].tt = self.t - self.processor[i].at
-                    self.processor[i].wait_time = self.processor[i].tt - self.processor[i].bt
-                    self.processor[i].ntt = self.processor[i].tt / self.processor[i].bt
-                    # self.processor[i].curr_time = 0
-                    self.processor[i] = None
+def main():
+    FCFS(input_func()).mulitcore_processing()
 
-    def isOver(self):
-        r = True
-        p = True
-        if len(self.readied) != len(self.processList):
-            r = False
-
-        for pro in self.processor:
-            if pro != None:
-                p = False
-                break
-        if self.queue.isEmpty() and r and p:
-            return True
-        else : return False
-
-
-def INPUT():
-    n_process = eval(input("# of Processes : "))
-    n_processor = eval(input("# of Processors : "))
-    AT = list(map(int, input("Arrival time : ").split()))
-    BT = list(map(int, input("Burst time : ").split()))
-    TQ = eval(input("Time quantum for RR : "))
-
-    return n_process, n_processor, list(AT), list(BT), TQ
-
-
-
-process_n, processor_n, AT, BT, TQ = INPUT()
-processList = []
-
-for i in range(process_n):
-    processList.append(process(AT[i], BT[i]))
-p = processor(processor_n, processList)
-while not p.isOver():
-    p.progressProcessor()
-
-
+# 메인 함수 호출
+main()
