@@ -17,7 +17,6 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
 }
 .row{
     margin: auto;
@@ -26,4 +25,42 @@ body{
 
 h2{
     text-align: center;
+}
+
+span{
+    text-align: right;
+    float: right;
+}
+
+.bar{
+    padding: 3%;
+    margin: 3%;
+    width: auto;
+}
+.s-bar{
+    padding: 5px;
+    margin: 5px;
+    width: 100%;
+}
+.mainBar{
+    padding: 5px;
+    margin: 5px;
+    width: 100%;
+}
+
+.cpu1{
+    padding: 5px;
+    margin: 5px;
+}
+.cpu2{
+    padding: 5px;
+    margin: 5px;
+}
+.cpu3{
+    padding: 5px;
+    margin: 5px;
+}
+.cpu4{
+    padding: 5px;
+    margin: 5px;
 }
