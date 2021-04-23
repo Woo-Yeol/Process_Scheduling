@@ -29,7 +29,7 @@ h2{
 
 span{
     text-align: right;
-    float: right;
+    padding: 1%;
 }
 
 .bar{
@@ -48,19 +48,29 @@ span{
     width: 100%;
 }
 
-.cpu1{
+#cpu1{
     padding: 5px;
     margin: 5px;
 }
-.cpu2{
+#cpu2{
     padding: 5px;
     margin: 5px;
 }
-.cpu3{
+#cpu3{
     padding: 5px;
     margin: 5px;
 }
-.cpu4{
+#cpu4{
     padding: 5px;
     margin: 5px;
+}
+#type{
+    float: left;
+}
+#pNum{
+    float: left;
+
+}
+#cntlBT{
+
 }

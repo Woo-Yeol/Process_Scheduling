@@ -261,7 +261,6 @@ class FCFS:
 
         return (result,p_memory)    
 
-
 class RR:
     # 생성자
     def __init__(self, input_value, time_quantum):
