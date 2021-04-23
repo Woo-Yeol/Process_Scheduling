@@ -123,8 +123,16 @@ class Spn:
                 # 프로세서에 있는 프로세스 처리하기
                 terminate += processor.running_process(time)
         # 출력
+        result = {'WT':[],'TT':[],'NTT':[]}
         for process in self.process_ls:
-            print(str(process))      
+            result['WT'].append(process.wt)
+            result['TT'].append(process.tt)
+            result['NTT'].append(process.ntt)
+        
+        for process in self.process_ls:
+            print(process)
+        print(result)
+        return result      
 
 # 공통 입력
 def input_func():

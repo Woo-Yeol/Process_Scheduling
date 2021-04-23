@@ -59,6 +59,7 @@ class Process:
         self.ntt = 0                 # Nomalized Turnaround Time TT/BT
         self.wt = 0                  # Waiting Time              TT-BT
         self.id = int(n+1)
+        # self.process_name = str(process_name)
 
     def modify_process(self,time):
         # 프로세서에서 처리가 완료된 프로세스 제거 및 프로세스 정보 설정
@@ -127,5 +128,12 @@ class Spn:
                 # 프로세서에 있는 프로세스 처리하기
                 terminate += processor.running_process(time)
         # 출력
+        result = []
         for process in self.process_ls:
-            print(str(process))      
+            result.append([process.at, process.r_bt, process.wt, process.tt, process.ntt])
+        
+        for process in self.process_ls:
+            print(process)
+
+        print(result)
+        return result    

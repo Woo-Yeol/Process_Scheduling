@@ -38,73 +38,26 @@
           <table class="table table-hover" id="table">
             <thead>
               <tr>
-                <th>#</th>
                 <th>Process</th>
                 <th>Arrive Time</th>
                 <th>Burst Time</th>
-                <th id="quantum">TimeQuantum</th>
                 <th>Waiting Time</th>
                 <th>Turnaround Time</th>
                 <th>Normalized Turnaround Time</th>
               </tr>
             </thead>
-
+            
             <tbody>
+              {% for result in results %}
               <tr class="quantum_td" >
-                <th scope="row">1</th>
-                <td><input type="text" class="form-control" placeholder="Process Name" aria-label="Process" name="Process_name"></td>
-                <td><input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time"></td>
-                <td><input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time"></td>
-                <td id="quantum"><input type="text" class="form-control" placeholder="TimeQuantum"
-                    aria-label="TimeQuantum" name="TimeQuantum"></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
+                <th scope="row">{{forloop.counter}}</th>
+                <td><input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" value="{{result.0}}"></td>
+                <td><input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time" value="{{result.1}}"></td>
+                <td><label>{{result.2}}</label></td>
+                <td><label>{{result.3}}</label></td>
+                <td><label>{{result.4}}</label></td>
               </tr>
-              <tr class="quantum_td">
-                <th scope="row">2</th>
-                <td><input type="text" class="form-control" placeholder="Process Name" aria-label="Process" name="Process_name"></td>
-                <td><input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time"></td>
-                <td><input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time"></td>
-                <td id="quantum"><input type="text" class="form-control" placeholder="TimeQuantum"
-                    aria-label="TimeQuantum" name="TimeQuantum"></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-              </tr>
-              <tr class="quantum_td">
-                <th scope="row">3</th>
-                <td><input type="text" class="form-control" placeholder="Process Name" aria-label="Process" name="Process_name"></td>
-                <td><input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time"></td>
-                <td><input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time"></td>
-                <td id="quantum"><input type="text" class="form-control" placeholder="TimeQuantum"
-                    aria-label="TimeQuantum" name="TimeQuantum"></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-              </tr>
-              <tr class="quantum_td">
-                <th scope="row">4</th>
-                <td><input type="text" class="form-control" placeholder="Process Name" aria-label="Process" name="Process_name"></td>
-                <td><input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time"></td>
-                <td><input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time"></td>
-                <td id="quantum"><input type="text" class="form-control" placeholder="TimeQuantum"
-                    aria-label="TimeQuantum" name="TimeQuantum"></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-              </tr>
-              <tr class="quantum_td">
-                <th scope="row">5</th>
-                <td><input type="text" class="form-control" placeholder="Process Name" aria-label="Process" name="Process_name"></td>
-                <td><input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time"></td>
-                <td><input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time"></td>
-                <td id="quantum"><input type="text" class="form-control" placeholder="TimeQuantum"
-                    aria-label="TimeQuantum" name="TimeQuantum"></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
           <input type="submit" value="제출">
@@ -175,24 +128,22 @@
 
 <!-- 테이블 추가,삭제 -->
 <script>
-  var count = 6;
+  localStorage.setItem("count",6);
   var full_count = 15;
-
+  var count = localStorage.count;
   function addRow() {
 
-    if (count > full_count) {
+    if (Number(localStorage.count) > full_count) {
       alert("최대15개까지만 가능합니다.");
       return;
     }
 
-    var add_cell1 = "<b>" + count + "</b>";
-    var add_cell2 = "<input type='text' class='form-control' placeholder='Process Name' aria-label='Process' name='Process_name' size=40>";
-    var add_cell3 = "<input type='text' class='form-control' placeholder='Arrive Time' aria-label='Arrive Time' name='Arrive_time' size=40>";
-    var add_cell4 = "<input type='text' class='form-control' placeholder='Burst Time' aria-label='Burst Time' name='Burst_time' size=40>";
-    var add_cell5 = "<input type='text' class='form-control' placeholder='TimeQuantum' aria-label='TimeQuantum' name='TimeQuantum' TimeQuantum'size=40>";
-    var add_cell6 = "-";
-    var add_cell7 = "-";
-    var add_cell8 = "-";
+    var add_cell1 = "<b>" + Number(localStorage.count) + "</b>";
+    var add_cell2 = '<input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" >';
+    var add_cell3 = '<input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time"';
+    var add_cell4 = "<label>-</label>";
+    var add_cell5 = "<label>-</label>";
+    var add_cell6 = "<label>-</label>";
 
 
     var table_name = document.getElementById("table");
@@ -200,28 +151,26 @@
     var new_row = table_name.insertRow();
 
     var new_cell = [];
-    for (var i = 1; i < 9; i++) {
+    for (var i = 1; i < 6; i++) {
       new_cell[i] = new_row.insertCell();
       new_cell[i].innerHTML = add_cell[i];
     }
-    count++;
+    localStorage.count = Number(localStorage.count) + 1;
   }
 
   function addRow() {
 
-    if (count > full_count) {
+    if (Number(localStorage.count) > full_count) {
       alert("최대15개까지만 가능합니다.");
       return;
     }
 
-    var add_cell1 = "<b>" + count + "</b>";
-    var add_cell2 = "<input type='text' class='form-control' placeholder='Process Name' aria-label='Process' name='Process_name' size=40>";
-    var add_cell3 = "<input type='text' class='form-control' placeholder='Arrive Time' aria-label='Arrive Time' name='Arrive_time' size=40>";
-    var add_cell4 = "<input type='text' class='form-control' placeholder='Burst Time' aria-label='Burst Time' name='Burst_time' size=40>";
-    var add_cell5 = "<input type='text' class='form-control' placeholder='TimeQuantum' aria-label='TimeQuantum' name='TimeQuantum' TimeQuantum'size=40>";
-    var add_cell6 = "-";
-    var add_cell7 = "-";
-    var add_cell8 = "-";
+    var add_cell1 = "<b>" + Number(localStorage.count) + "</b>";
+    var add_cell2 = '<input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" >';
+    var add_cell3 = '<input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time">';
+    var add_cell4 = "<label>-</label>";
+    var add_cell5 = "<label>-</label>";
+    var add_cell6 = "<label>-</label>";
 
 
     var table_name = document.getElementById("table");
@@ -234,8 +183,6 @@
     var new_cell4 = new_row.insertCell();
     var new_cell5 = new_row.insertCell();
     var new_cell6 = new_row.insertCell();
-    var new_cell7 = new_row.insertCell();
-    var new_cell8 = new_row.insertCell();
 
     new_cell1.innerHTML = add_cell1;
     new_cell2.innerHTML = add_cell2;
@@ -243,10 +190,8 @@
     new_cell4.innerHTML = add_cell4;
     new_cell5.innerHTML = add_cell5;
     new_cell6.innerHTML = add_cell6;
-    new_cell7.innerHTML = add_cell7;
-    new_cell8.innerHTML = add_cell8;
 
-    count++;
+    localStorage.count = Number(localStorage.count) + 1;
   }
 
   function deleteRow() {
@@ -258,7 +203,7 @@
     }
 
     table.deleteRow(table.rows.length - 1);
-    count--;
+    localStorage.count = Number(localStorage.count)-1;
   }
 </script>
 
