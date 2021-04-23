@@ -29,7 +29,7 @@ h2{
 
 span{
     text-align: right;
-    float: right;
+    padding: 1%;
 }
 
 .bar{
@@ -63,4 +63,14 @@ span{
 #cpu4{
     padding: 5px;
     margin: 5px;
+}
+#type{
+    float: left;
+}
+#pNum{
+    float: left;
+
+}
+#cntlBT{
+
 }

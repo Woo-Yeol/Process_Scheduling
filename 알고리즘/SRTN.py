@@ -71,7 +71,7 @@ def is_cpu_full(time):
 
 # 선점여부 확인하기
 def check_rbt(time):
-    checkQue= PriorityQueue()
+    checkQue = PriorityQueue()
     for i in range(len(process_ls)):                                            # cpu에 들어갈 후보 선출 (cpu안에 있는애들 + readyque에 있는애들)
         if process_ls[i].at <= time and process_ls[i].rt !=0:
             checkQue.enqueue(process_ls[i])
@@ -95,14 +95,15 @@ def running_process(i,time):
     if processor_ls[i].running == True:
         processor_ls[i].process.rt -= 1
         # 프로세스 처리가 완료된 프로세스 상태 변경
+        print("time" + str(time) + str(processor_ls[i].process)+ " " )  
         if processor_ls[i].process.rt == 0:
-                processor_ls[i].running = False
-                # process 정보 변경
-                modify_process(i,time)
-                # 프로세스 종료되면
-                print("time" + str(time) + str(processor_ls[i].process)+ " " )        
-                return 1
-        print("time" + str(time) + str(processor_ls[i].process)+ " " )                
+            processor_ls[i].running = False
+            # process 정보 변경
+            modify_process(i,time)
+            # 프로세스 종료되면
+            # print("time" + str(time) + str(processor_ls[i].process)+ " " )        
+            return 1
+        # print("time" + str(time) + str(processor_ls[i].process)+ " " )                
     return 0              
 # 프로세스 정보 수정하기
 def modify_process(i,time):
@@ -140,10 +141,9 @@ def SRTN():
         for i in range(len(processor_ls)):
             ready_to_running(i)                        # 비어있는 프로세서에 p 넣기
             if is_cpu_full(time)==True and readyQue.isEmpty() != True:
-                print(f'readyQue:{readyQue.peek().id}')
                 check_rbt(time)                            # 선점여부 확인하기
             terminate += running_process(i,time)       # 프로세서에 있는 프로세스의 Burst Time 1 빼기       
-              
+
     
     # 출력
     for i in range(len(process_ls)):
