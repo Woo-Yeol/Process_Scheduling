@@ -75,6 +75,7 @@ class Processor:
     def __init__(self):
         self.running = False
         self.process = None
+        self.processor_memory = []
 
     # 프로세서에 프로세스 할당
     def ready_to_running(self,readyQue):
@@ -84,8 +85,13 @@ class Processor:
                 self.running = True
 
     def running_process(self,time):
+        
+        if self.process == None:
+            self.processor_memory.append(None)
+        else:
+            self.processor_memory.append(self.process.id)
+
         if self.running == True:
-            print("time" + str(time) + str(self.process)+ " " )
             self.process.bt -= 1
             # 프로세스 처리가 완료된 프로세스 상태 변경
             if self.process.bt == 0:
@@ -131,9 +137,10 @@ class Spn:
         result = []
         for process in self.process_ls:
             result.append([process.at, process.r_bt, process.wt, process.tt, process.ntt])
-        
-        for process in self.process_ls:
-            print(process)
 
-        print(result)
-        return result    
+        p_memory = []
+        for processor in self.processor_ls:
+            print(processor.processor_memory)
+            p_memory.append(processor.processor_memory)
+
+        return (result,p_memory)    

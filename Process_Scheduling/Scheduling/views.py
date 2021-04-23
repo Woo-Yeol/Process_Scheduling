@@ -3,14 +3,15 @@ from .models import Process,Processor,Spn
 
 # Create your views here.
 def index(request):
+    # init
     result = [['0','3','-','-','-'],['1','7','-','-','-',],['3','2','-','-','-',],['5','5','-','-','-',],['6','3','-','-','-',]]
     if request.method == "POST":
         if not request.POST["Burst_time"] == "":
             # choose_scheduling_type(request)
-            print(request.POST)
             result = Spn(input_value(request)).mulitcore_processing()
-            return render(request, 'index.html', {'results':result})
-    print(result)
+            result, memory = result[0], result[1]
+            print(memory)
+            return render(request, 'index.html', {'results':result,'memory':memory})
     return render(request, 'index.html',{'results':result})
 
 def input_value(request):
