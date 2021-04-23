@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Process,Processor,SPN,FCFS,RR,SRTN,HRRN
+from .models import Process,Processor,SPN,FCFS,RR,SRTN,HRRN,DTRR
 
 # Create your views here.
 def index(request):
@@ -42,3 +42,5 @@ def choose_scheduling_type(request):
         return SRTN(input_value(request)).multicore_processing()
     elif request.POST["scheduling-type"] == "HRRN":
         return HRRN(input_value(request)).multicore_processing()
+    else:
+        return DTRR(input_value(request)).multicore_processing()

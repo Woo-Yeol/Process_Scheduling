@@ -1,4 +1,11 @@
 from django.db import models
+import random
+
+HIGH = 1
+MEDIUM = 2
+LOW = 3
+priority = [HIGH, MEDIUM, LOW]
+global context_switch; context_switch = 0
 
 # # Create your models here.
 
@@ -77,6 +84,27 @@ class HRRNPriorityReadyQueue(PriorityReadyQueue):
                     highest = i  # 인덱스 갱신
             return highest
 
+class DTRRReadyQueue(ReadyQueue):
+    def __init__(self):
+        self.items = []
+        self.save_bt = 0
+        self.save_n = 0
+        self.d_tq = 0
+
+    def readyQue(self, process_ls, time):  # 부모클래스 메소드 overriding
+        for process in process_ls:
+            if process.at == time:
+                self.enqueue(process)
+                self.get_DTQ()  # 새로운 process가 삽입될때마다 get DTQ
+
+    def get_DTQ(self):
+        for process in self.items:
+            if process.is_new == True:  # 큐에 처음 들어온 process에 대해
+                self.save_bt += process.bt
+                self.save_n += 1
+
+        self.d_tq = round(self.save_bt / self.save_n)  # 누적 평균 계산
+
 # Process Class Declair
 class Process:
     def __init__(self, bt, at, n,tq=0):
@@ -90,7 +118,8 @@ class Process:
         self.tq = int(tq)  # Process Time Quantum
         self.r_tq = int(tq)  # Process Time Quantum 기억용
         self.ratio = 0
-
+        self.is_new = True
+        self.priority = random.choice(priority)
 
     def __str__(self):
         return "#Process" + str(self.id) + " AT = " + str(self.at) + " BT = " + str(self.bt) + " TT = " + str(
@@ -150,6 +179,45 @@ class Processor:
                 readyQue.enqueue(self.process)  # 자원을 반납한 프로세스는 큐의 맨 뒤에서 다시 대기
                 self.process = None  # 자원 반납 후 할당 해제
 
+    def time_progress_Lpriority(self, readyQue):
+        global context_switch
+        if self.running == True:
+            self.process.tq += 1
+
+            if self.process.tq >= (readyQue.d_tq - 0.15 * readyQue.d_tq):  # LOW priority프로세스에 대해 tq -15%
+                self.running = False  # 자원 반납
+                self.process.tq = 0  # 해당 프로세스의 다음 처리를 위해 제한시간 다시 부여
+                self.process.is_new = False
+                readyQue.enqueue(self.process)  # 자원을 반납한 프로세스는 큐의 맨 뒤에서 다시 대기
+                self.process = None  # 자원 반납 후 할당 해제
+                context_switch += 1
+
+    def time_progress_Mpriority(self, readyQue):
+        global context_switch
+        if self.running == True:
+            self.process.tq += 1
+
+            if self.process.tq >= (readyQue.d_tq + 0 * readyQue.d_tq):  # 자원 제한시간이 지나면
+                self.running = False  # 자원 반납
+                self.process.tq = 0  # 해당 프로세스의 다음 처리를 위해 제한시간 다시 부여
+                self.process.is_new = False
+                readyQue.enqueue(self.process)  # 자원을 반납한 프로세스는 큐의 맨 뒤에서 다시 대기
+                self.process = None  # 자원 반납 후 할당 해제
+                context_switch += 1
+
+    def time_progress_Hpriority(self, readyQue):
+        global context_switch
+        if self.running == True:
+            self.process.tq += 1
+
+            if self.process.tq >= (readyQue.d_tq + 0.15 * readyQue.d_tq):  # HIGH priority프로세스에 대해 tq + 15%
+                self.running = False  # 자원 반납
+                self.process.tq = 0  # 해당 프로세스의 다음 처리를 위해 제한시간 다시 부여
+                self.process.is_new = False
+                readyQue.enqueue(self.process)  # 자원을 반납한 프로세스는 큐의 맨 뒤에서 다시 대기
+                self.process = None  # 자원 반납 후 할당 해제
+                context_switch += 1
+
 # FCFS Scheduling Class 생성
 class FCFS:
     # 생성자
@@ -192,6 +260,7 @@ class FCFS:
             p_memory.append(processor.processor_memory)
 
         return (result,p_memory)    
+
 
 class RR:
     # 생성자
@@ -397,4 +466,59 @@ class HRRN:
             print(processor.processor_memory)
             p_memory.append(processor.processor_memory)
 
+        return (result,p_memory)    
+
+# RR Scheduling Class 생성
+class DTRR:
+    # 생성자
+    def __init__(self, input_value):
+        self.process_ls = []
+        self.processor_ls = []
+        self.readyQueue = DTRRReadyQueue()
+
+        self.process_n = int(input_value[0])
+        self.processor_n = int(input_value[1])
+        self.bt_ls = list(input_value[2])
+        self.at_ls = list(input_value[3])
+
+        # 프로세스/프로세서 객체 생성
+        for n in range(self.process_n):
+            self.process_ls.append(Process(self.bt_ls[n], self.at_ls[n], n))
+        for n in range(self.processor_n):
+            self.processor_ls.append(Processor())
+
+    # DTRR 멀티코어 프로세싱
+    def multicore_processing(self):
+        time = 0;
+        terminate = 0
+        while (terminate != self.process_n):
+            self.readyQueue.readyQue(self.process_ls, time)  # at에 예정된 프로세스 삽입
+            for processor in self.processor_ls:
+                if processor.process != None:
+                    if processor.process.priority == LOW:  # 우선순위 별 TQ 조정
+                        processor.time_progress_Lpriority(self.readyQueue)
+                    elif processor.process.priority == MEDIUM:
+                        processor.time_progress_Mpriority(self.readyQueue)
+                    else:
+                        processor.time_progress_Hpriority(self.readyQueue)
+                # 시간 경과에 따른 제한시간(Time Quantum)처리
+
+            time += 1
+            for processor in self.processor_ls:
+                # 큐에 프로세스가 있다면 비어있는 프로세서에 할당
+                processor.ready_to_running(self.readyQueue)
+                # 프로세서에 있는 프로세스 처리하기
+                terminate += processor.running_process(time)
+                # processor.time_progress(self.readyQueue)
+        # 출력
+        result = []
+        for process in self.process_ls:
+            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])
+
+        p_memory = []
+        for processor in self.processor_ls:
+            print(processor.processor_memory)
+            p_memory.append(processor.processor_memory)
+
+        print("context_switch : ", context_switch)
         return (result,p_memory)    
