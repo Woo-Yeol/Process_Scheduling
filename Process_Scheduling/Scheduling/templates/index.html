@@ -14,35 +14,37 @@
 
         <div class="select">
           <span id="type">
-          <label>SCHEDULING TYPE</label>
-          <select class="scheduling-type" name="scheduling-type" aria-label=".scheduling-type">
-            <option value="FCFS">FCFS</option>
-            <option value="RR">RR</option>
-            <option value="SPN">SPN</option>
-            <option value="SRTN">SRTN</option>
-            <option value="HRRN">HRRN</option>
-          </select>
+            <label>SCHEDULING TYPE</label>
+            <select class="scheduling-type" name="scheduling-type" aria-label=".scheduling-type">
+              <option value="FCFS">FCFS</option>
+              <option value="RR">RR</option>
+              <option value="SPN">SPN</option>
+              <option value="SRTN">SRTN</option>
+              <option value="HRRN">HRRN</option>
+            </select>
           </span>
           <tr>&emsp;
             <span id="pNum">
-            <label>&nbsp; PROCESSOR NUMBER</label>
-            <select class="processor-number" name="processor-number" aria-label=".processor-number" onchange="numCpu(this)">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
+              <label>&nbsp; PROCESSOR NUMBER</label>
+              <select id="processor-number" name="processor-number" aria-label=".processor-number"
+                onchange="selectCpuNum(this)">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+              <div id="num"></div>
             </span>
-            
-            <tr></tr>
-            <span id="col-xs-2">
-              <label>TimeQuantum</label>
-              <input type="text" placeholder="TimeQuantum">
-            </span>
-            <span id="cntlBT">
-              <button type="button" class="btn btn-success" value="add" onclick="addRow()">Add</button>
-              <button type="button" class="btn btn-warning" value="delete" onclick="deleteRow()">delete</button>
-            </span>
+
+          <tr></tr>
+          <span id="col-xs-2">
+            <label>TimeQuantum</label>
+            <input type="text" placeholder="TimeQuantum">
+          </span>
+          <span id="cntlBT">
+            <button type="button" class="btn btn-success" value="add" onclick="addRow()">Add</button>
+            <button type="button" class="btn btn-warning" value="delete" onclick="deleteRow()">delete</button>
+          </span>
         </div>
         <div>
           <table class="table table-hover" id="table">
@@ -56,13 +58,15 @@
                 <th>Normalized Turnaround Time</th>
               </tr>
             </thead>
-            
+
             <tbody>
               {% for result in results %}
-              <tr class="quantum_td" >
+              <tr class="quantum_td">
                 <th scope="row">{{forloop.counter}}</th>
-                <td><input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" value="{{result.0}}"></td>
-                <td><input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time" value="{{result.1}}"></td>
+                <td><input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time"
+                    name="Arrive_time" value="{{result.0}}"></td>
+                <td><input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time"
+                    name="Burst_time" value="{{result.1}}"></td>
                 <td><label>{{result.2}}</label></td>
                 <td><label>{{result.3}}</label></td>
                 <td><label>{{result.4}}</label></td>
@@ -140,9 +144,10 @@
 
 <!-- 테이블 추가,삭제 -->
 <script>
-  localStorage.setItem("count",6);
+  localStorage.setItem("count", 6);
   var full_count = 15;
   var count = localStorage.count;
+
   function addRow() {
 
     if (Number(localStorage.count) > full_count) {
@@ -151,8 +156,10 @@
     }
 
     var add_cell1 = "<b>" + Number(localStorage.count) + "</b>";
-    var add_cell2 = '<input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" >';
-    var add_cell3 = '<input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time"';
+    var add_cell2 =
+      '<input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" >';
+    var add_cell3 =
+      '<input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time"';
     var add_cell4 = "<label>-</label>";
     var add_cell5 = "<label>-</label>";
     var add_cell6 = "<label>-</label>";
@@ -178,8 +185,10 @@
     }
 
     var add_cell1 = "<b>" + Number(localStorage.count) + "</b>";
-    var add_cell2 = '<input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" >';
-    var add_cell3 = '<input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time">';
+    var add_cell2 =
+      '<input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" >';
+    var add_cell3 =
+      '<input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time">';
     var add_cell4 = "<label>-</label>";
     var add_cell5 = "<label>-</label>";
     var add_cell6 = "<label>-</label>";
@@ -215,7 +224,7 @@
     }
 
     table.deleteRow(table.rows.length - 1);
-    localStorage.count = Number(localStorage.count)-1;
+    localStorage.count = Number(localStorage.count) - 1;
   }
 </script>
 
@@ -242,12 +251,11 @@
 
 <!-- cpu 수 조절하기 -->
 <script>
-  function numCpu(e){
+  function selectCpuNum(e) {
     //선택한 cpu 수
     const num = e.options[e.selectedIndex].text;
-    console.log(e.options);
-    document.getElementById('num').innerText
-      = num;
+    //console.log(e.options);
+    document.getElementById('num').innerText = num;
     console.log(num);
 
     const cpu1 = document.getElementById('cpu1');
@@ -255,30 +263,53 @@
     const cpu3 = document.getElementById('cpu3');
     const cpu4 = document.getElementById('cpu4');
 
-    switch(Number(num)){
-      case 1:
-        console.log('1누루미');
-        cpu2.style.display = "none";
-        cpu3.style.display = "none";
-        cpu4.style.display = "none";
+    var select = document.getElementById("processor-number");
+    console.log(select);
+    var selectValue = select.options[select.selectedIndex].value;
+    console.log(selectValue);
+    //var selectText = select.options[select.selectedIndex].text;
+    //console.log(selectText);
 
-        break;
-      case 2:
-        console.log('2누루미');
-        cpu3.style.display = "none";
-        cpu4.style.display = "none";
+    //if ($('input:radio[id=aaa]').is(':checked')) {
+    //  $('#divId').hide();
+    //} else {
+    //  $('#divId').show();
+    //}
 
-        break;
-      case 3:
-        console.log('3누루미');
-        cpu4.style.display = "none";
-        
+      switch (Number(num)) {
+        case 1:
+          console.log('1누루미');
+          cpu1.style.display = '';
+          cpu2.style.display = "none";
+          cpu3.style.display = "none";
+          cpu4.style.display = "none";
 
-        break;
-      case 4:
-        console.log('4누루미');
-        break;
-    }
+          break;
+        case 2:
+          console.log('2누루미');
+          cpu1.style.display = '';
+          cpu2.style.display = '';
+          cpu3.style.display = "none";
+          cpu4.style.display = "none";
+
+          break;
+        case 3:
+          console.log('3누루미');
+          cpu1.style.display = '';
+          cpu2.style.display = '';
+          cpu3.style.display = '';
+          cpu4.style.display = "none";
+
+
+          break;
+        case 4:
+          console.log('4누루미');
+          cpu1.style.display = '';
+          cpu2.style.display = '';
+          cpu3.style.display = '';
+          cpu4.style.display = '';
+          break;
+      }
 
   }
 </script>
