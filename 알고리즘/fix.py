@@ -92,15 +92,16 @@ class Process:
         self.r_tq = int(tq)  # Process Time Quantum 기억용
         self.ratio = 0
 
+
+    def __str__(self):
+        return "#Process" + str(self.id) + " AT = " + str(self.at) + " BT = " + str(self.bt) + " TT = " + str(
+            self.tt) + " NTT = " + str(self.ntt) + " WT = " + str(self.wt)
+
     def modify_process(self, time):
         # 프로세서에서 처리가 완료된 프로세스 제거 및 프로세스 정보 설정
         self.tt = time - self.at
         self.ntt = round(self.tt / self.rbt, 2)
         self.wt = self.tt - self.rbt  # processor의 process
-
-    def __str__(self):
-        return "#Process" + str(self.id) + " AT = " + str(self.at) + " BT = " + str(self.bt) + " TT = " + str(
-            self.tt) + " NTT = " + str(self.ntt) + " WT = " + str(self.wt)
 
     def calc_ratio(self):
         self.ratio = (self.rbt + self.wt) / self.rbt
@@ -112,6 +113,7 @@ class Processor:
         self.running = False
         self.process = None
         self.lock = False
+        self.processor_memory = []
 
     # 프로세서에 프로세스 할당
     def ready_to_running(self, readyQue):
@@ -123,9 +125,14 @@ class Processor:
                 self.running = True
 
     def running_process(self, time):
+        # 프로세서에 어떤 프로세스가 실행되었는지 기록한다.
+        if self.process == None:
+            self.processor_memory.append(None)
+        else:
+            self.processor_memory.append(self.process.id)
+
         if self.running == True:
             self.process.bt -= 1
-            print("time" + str(time) + str(self.process) + " ")
             # 프로세스 처리가 완료된 프로세스 상태 변경
             if self.process.bt == 0:
                 self.running = False
@@ -146,71 +153,178 @@ class Processor:
                 self.process = None  # 자원 반납 후 할당 해제
 
 
-class Scheduling:
+# FCFS Scheduling Class 생성
+class FCFS:
+    # 생성자
     def __init__(self, input_value):
         self.process_ls = []
         self.processor_ls = []
+        self.readyQueue =ReadyQueue()
+
         self.process_n = int(input_value[0])
         self.processor_n = int(input_value[1])
         self.bt_ls = list(input_value[2])
         self.at_ls = list(input_value[3])
-        self.scheduling = input_value[4]
-        if self.scheduling == 'FCFS': self.readyQueue = ReadyQueue()
-        if self.scheduling == 'RR':
-            self.readyQueue = ReadyQueue()
-            self.time_quantum = eval(input("#Time Quantum : "))
-        if self.scheduling == 'SPN': self.readyQueue = SPNPriorityReadyQueue()
-        if self.scheduling == 'SRTN': self.readyQueue = SRTNPriorityReadyQueue()
-        if self.scheduling == 'HRRN': self.readyQueue = HRRNPriorityReadyQueue()
-        # if self.scheduling == 'DTRR': self.readyQueue = DTRRPriorityReadyQueue()
 
         # 프로세스/프로세서 객체 생성
         for n in range(self.process_n):
-            if self.scheduling == 'RR':
-                self.process_ls.append(Process(self.bt_ls[n], self.at_ls[n], n, self.time_quantum))
-            else:
-                self.process_ls.append(Process(self.bt_ls[n], self.at_ls[n], n))
+            self.process_ls.append(Process(self.bt_ls[n], self.at_ls[n], n))
         for n in range(self.processor_n):
             self.processor_ls.append(Processor())
 
+    # FCFS 멀티코어 프로세싱
     def mulitcore_processing(self):
         time = 0;
         terminate = 0
-        while terminate != self.process_n:
+        while (terminate != self.process_n):
             self.readyQueue.readyQue(self.process_ls, time)
-            if self.scheduling == 'RR':
-                for processor in self.processor_ls:
-                    processor.time_progress(self.readyQueue)
-                    # 시간 경과에 따른 제한시간(Time Quantum)처리
             time += 1
             for processor in self.processor_ls:
                 # 큐에 프로세스가 있다면 비어있는 프로세서에 할당
                 processor.ready_to_running(self.readyQueue)
-                if self.scheduling == 'SRTN':
-                    if self.is_cpu_full(time) == True and self.readyQueue.isEmpty() != True:
-                        self.check_rbt(time)  # 선점여부 확인하기
                 # 프로세서에 있는 프로세스 처리하기
                 terminate += processor.running_process(time)
         # 출력
+        result = []
         for process in self.process_ls:
-            print(str(process))
+            result.append([process.at, process.r_bt, process.wt, process.tt, process.ntt])
+
+        p_memory = []
+        for processor in self.processor_ls:
+            print(processor.processor_memory)
+            p_memory.append(processor.processor_memory)
+
+        return (result,p_memory)    
+
+
+class RR:
+    # 생성자
+    def __init__(self, input_value,time_quantum):
+        self.process_ls = []
+        self.processor_ls = []
+        self.readyQueue = ReadyQueue()
+
+        self.process_n = int(input_value[0])
+        self.processor_n = int(input_value[1])
+        self.bt_ls = list(input_value[2])
+        self.at_ls = list(input_value[3])
+        self.time_quantum = eval(time_quantum)
+
+        # 프로세스/프로세서 객체 생성
+        for n in range(self.process_n):
+            self.process_ls.append(Process(self.bt_ls[n], self.at_ls[n], n, self.time_quantum))
+        for n in range(self.processor_n):
+            self.processor_ls.append(Processor())
+
+    # RR 멀티코어 프로세싱
+    def mulitcore_processing(self):
+        time = 0;
+        terminate = 0
+        while (terminate != self.process_n):
+            self.readyQueue.readyQue(self.process_ls, time)
+            for processor in self.processor_ls:
+                processor.time_progress(self.readyQueue)
+                # 시간 경과에 따른 제한시간(Time Quantum)처리
+
+            time += 1
+            for processor in self.processor_ls:
+                # 큐에 프로세스가 있다면 비어있는 프로세서에 할당
+                processor.ready_to_running(self.readyQueue)
+                # 프로세서에 있는 프로세스 처리하기
+                terminate += processor.running_process(time)
+                # processor.time_progress(self.readyQueue)
+
+        # 출력
+        result = []
+        for process in self.process_ls:
+            result.append([process.at, process.r_bt, process.wt, process.tt, process.ntt])
+
+        p_memory = []
+        for processor in self.processor_ls:
+            print(processor.processor_memory)
+            p_memory.append(processor.processor_memory)
+
+        return (result,p_memory)    
+
+class SPN:
+    # 생성자
+    def __init__(self, input_value):
+        self.process_ls = []
+        self.processor_ls = []
+        self.readyQueue = SPNPriorityReadyQueue()
+
+        self.process_n = int(input_value[0])
+        self.processor_n = int(input_value[1])
+        self.bt_ls = list(input_value[2])
+        self.at_ls = list(input_value[3])
+
+        # 프로세스/프로세서 객체 생성
+        for n in range(self.process_n):
+            self.process_ls.append(Process(self.bt_ls[n], self.at_ls[n], n))
+        for n in range(self.processor_n):
+            self.processor_ls.append(Processor())
+
+    # SPN 멀티코어 프로세싱
+    def mulitcore_processing(self):
+        time = 0;
+        terminate = 0
+        while (terminate != self.process_n):
+            self.readyQueue.readyQue(self.process_ls, time)
+            time += 1
+            for processor in self.processor_ls:
+                # 큐에 프로세스가 있다면 비어있는 프로세서에 할당
+                processor.ready_to_running(self.readyQueue)
+                # 프로세서에 있는 프로세스 처리하기
+                terminate += processor.running_process(time)
+        # 출력
+        result = []
+        for process in self.process_ls:
+            result.append([process.at, process.r_bt, process.wt, process.tt, process.ntt])
+
+        p_memory = []
+        for processor in self.processor_ls:
+            print(processor.processor_memory)
+            p_memory.append(processor.processor_memory)
+
+        return (result,p_memory)    
+
+
+class SRTN:
+    # 생성자
+    def __init__(self, input_value):
+        self.process_ls = []
+        self.processor_ls = []
+        self.readyQueue = SRTNPriorityReadyQueue()
+        self.process_n = int(input_value[0])
+        self.processor_n = int(input_value[1])
+        self.bt_ls = list(input_value[2])
+        self.at_ls = list(input_value[3])
+
+        # 프로세스/프로세서 객체 생성
+        for n in range(self.process_n):
+            self.process_ls.append(Process(self.bt_ls[n], self.at_ls[n], n))
+        for n in range(self.processor_n):
+            self.processor_ls.append(Processor())
 
     # CPU가 다 꽉찼는지 여부 확인
     def is_cpu_full(self,time):
         cnt = 0
-        for processor in self.processor_ls:
-            if processor.running == True: cnt += 1
-        if cnt == len(self.processor_ls): return True
-        else: return False
+        for i in range(len(self.processor_ls)):
+            if self.processor_ls[i].running == True:
+                cnt += 1
+        if cnt == len(self.processor_ls):
+            return True
+        else:
+            return False
 
-    # 선점여부 확인하기
     def check_rbt(self,time):
+        checkQue = SRTNPriorityReadyQueue()
         for i in range(len(self.process_ls)):  # cpu에 들어갈 후보 선출 (cpu안에 있는애들 + readyque에 있는애들)
             if self.process_ls[i].at <= time and self.process_ls[i].bt != 0:
-                self.readyQueue.enqueue(self.process_ls[i])
+                checkQue.enqueue(self.process_ls[i])
 
         for i in range(len(self.processor_ls)):  # 프로세서 수 만큼 순위 매기기
-            to_go_process = self.readyQueue.dequeue()  # to_go_process : cpu에 들어가야할 p
+            to_go_process = checkQue.dequeue()  # to_go_process : cpu에 들어가야할 p
             for j in range(len(self.processor_ls)):
                 if to_go_process == self.processor_ls[j].process:  # 우선순위(to_go_process)가 cpu안에 있으면
                     self.processor_ls[j].lock = True
@@ -224,20 +338,94 @@ class Scheduling:
         for j in range(len(self.processor_ls)):
             self.processor_ls[j].lock = False
 
+    # SPN 멀티코어 프로세싱
+    def mulitcore_processing(self):
+        time = 0;
+        terminate = 0
+        while (terminate != self.process_n):
+            self.readyQueue.readyQue(self.process_ls, time)
+            time += 1
+            for processor in self.processor_ls:
+                # 큐에 프로세스가 있다면 비어있는 프로세서에 할당
+                processor.ready_to_running(self.readyQueue)
+                if self.is_cpu_full(time) == True and self.readyQueue.isEmpty() != True:
+                    self.check_rbt(time)
+                # 프로세서에 있는 프로세스 처리하기
+                terminate += processor.running_process(time)
+        # 출력
+        result = []
+        for process in self.process_ls:
+            result.append([process.at, process.r_bt, process.wt, process.tt, process.ntt])
+
+        p_memory = []
+        for processor in self.processor_ls:
+            print(processor.processor_memory)
+            p_memory.append(processor.processor_memory)
+
+        return (result,p_memory)    
+
+
+
+class HRRN:
+    def __init__(self,input):
+        self.process_n = input[0]
+        self.processor_n = input[1]
+        self.process = []
+        self.processor = []
+        self.at = input[2]
+        self.bt = input[3]
+        self.queue = HRRNPriorityReadyQueue()
+        self.chart = [[] for _ in range(self.processor_n)]
+
+        # 프로세스/프로세서 객체 생성
+        for i in range(self.process_n):
+            self.process.append(Process(self.at[i],self.bt[i],i))
+        for i in range(self.processor_n):
+            self.processor.append(Processor())
+
+
+    # HRRN 멀티코어 프로세싱
+    def multicore_processing(self):
+        time = 0
+        terminate = 0
+        while terminate != self.process_n:
+            self.queue.readyQueue(self.process,time)
+            time += 1
+            for proc in self.processor:
+                proc.allocateProcess(self.queue)
+                terminate += proc.progressProcessor(time)
+        # 출력
+        result = []
+        for process in self.process_ls:
+            result.append([process.at, process.r_bt, process.wt, process.tt, process.ntt])
+
+        p_memory = []
+        for processor in self.processor_ls:
+            print(processor.processor_memory)
+            p_memory.append(processor.processor_memory)
+
+        return (result,p_memory)    
+
+
+
 def input_func():
-    schedulingDict = {1: 'FCFS', 2: 'RR', 3: 'SPN', 4: 'SRTN', 5: 'HRRN', 6: 'DTRR'}
-    print("\n1.FCFS  2.RR  3.SPN  4.SRTN  5.HRRN  6.DTRR")
-    scheduling = int(input("#Select Scheduling: "))
     process_n = eval(input("#Process : "))
     processor_n = eval(input("#Processor : "))
     bt_ls = list(map(int, input("#Burst Time : ").split()))
     at_ls = list(map(int, input("#Arrive Time : ").split()))
-    result = [process_n, processor_n, bt_ls, at_ls,schedulingDict[scheduling]]
+    result = [process_n, processor_n, bt_ls, at_ls]
     return result
 
 
 def main():
-    Scheduling(input_func()).mulitcore_processing()
+    print("\n1.FCFS  2.RR  3.SPN  4.SRTN  5.HRRN  6.DTRR")
+    scheduling = int(input("#Select Scheduling: "))
+    if scheduling == 1: FCFS(input_func()).mulitcore_processing()
+    if scheduling == 2: RR(input_func()).mulitcore_processing()
+    if scheduling == 3: SPN(input_func()).mulitcore_processing()
+    if scheduling == 4: SRTN(input_func()).mulitcore_processing()
+    if scheduling == 5: HRRN(input_func()).mulitcore_processing()
+    # if scheduling == 6: DTRR(input_func()).mulitcore_processing()
 
 # 메인 함수 호출
 main()

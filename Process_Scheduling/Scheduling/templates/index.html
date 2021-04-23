@@ -29,6 +29,10 @@
               <option value="3">3</option>
               <option value="4">4</option>
             </select>
+            <div id = "TimeQuantum">
+            <label>&nbsp; TIMEQUANTUM</label>
+            <input type="text" class="form-control"  placeholder="TimeQuantum" aria-label="TimeQuantum" name="TimeQuantum" value=2>
+           </div>
             <span><input type="button" value="add" onclick="addRow()" /></span>
             <span><input type="button" value="delete" onclick="deleteRow()" /></span>
             <span><input type="button" value="hide" onclick="hideRow()" /></span>
@@ -48,6 +52,7 @@
             </thead>
             
             <tbody>
+              <!-- Table을 Template 언어를 사용한 반복문으로 생성하기 -->
               {% for result in results %}
               <tr class="quantum_td" >
                 <th scope="row">{{forloop.counter}}</th>
@@ -211,7 +216,7 @@
 <!-- TimeQuantum 보이기 숨기기 -->
 <script>
   function hideRow() {
-    const col = document.getElementById('quantum');
+    const col = document.getElementById("TimeQuantum");
     //const td = quantum_td.tr td:nth-child()
     //const col_td = col
     col.style.display = 'none';
@@ -220,7 +225,7 @@
   }
 
   function showRow() {
-    const col = document.getElementById('quantum');
+    const col = document.getElementById("TimeQuantum");
     //const col_td = col.innerText;
     col.style.display = '';
     //col_td.style.display = '';
