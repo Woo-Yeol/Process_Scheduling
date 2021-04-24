@@ -450,11 +450,14 @@ class HRRN:
         for n in range(self.processor_n):
             self.processor_ls.append(Processor())
 
-    # HRRN멀티코어 프로세싱
-    def multicore_processing(self):
-        time = 0; terminate = 0
-        
-        while (terminate != self.process_n):
+    def mulitcore_processing(self):
+        time = 0;
+        terminate = 0
+        while terminate != self.process_n:
+            for process in self.process_ls:
+                process.tt = time - process.at
+                process.wt = process.tt - (process.rbt - process.bt)  # processor의 process
+                process.calc_ratio()
             self.readyQueue.readyQue(self.process_ls, time)
             time += 1
             for processor in self.processor_ls:
