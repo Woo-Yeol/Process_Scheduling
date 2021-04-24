@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
 <link rel="stylesheet" href={% static "css/index.css" %}>
-<link href={% static "table.js" %}>
-
 <div class="container-fluid">
   <div class="main">
     <div class="main-up">
       <form action="" method="post">
         {% csrf_token %}
         <div>
-          <h2>Process Table</h2>
+          <h1>Process Table</h1>
         </div><br><br>
 
+        <!-- 프로세서 typ, 수 선택 -->
         <div class="select">
           <span id="type">
             <label for="scheduling-type"">SCHEDULING TYPE</label>
@@ -29,26 +29,28 @@
             <span id="pNum">
               <label for="processor-number">&nbsp; PROCESSOR NUMBER</label>
               <select class="processor-number" name="processor-number" aria-label=".processor-number"
-                onchange="numCpu(this)" id="processor-number">
+               id="processor-number">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
               </select>
             </span>
-            <select name="" id="">
-              <option value=""></option>
-            </select>
+            <!-- TimeQuantum 입력폼  -->
           <tr></tr>
-          <span id="col-xs-2">
-            <label for="TimeQuantum">TimeQuantum</label>
+          <span id="col-xs-2" style="visibility:hidden">
+            <label>TimeQuantum</label>
             <input type="text" placeholder="TimeQuantum" name="TimeQuantum" id="TimeQuantum">
           </span>
+
           <span id="cntlBT">
             <button type="button" class="btn btn-success" value="add" onclick="addRow()">Add</button>
             <button type="button" class="btn btn-warning" value="delete" onclick="deleteRow()">Delete</button>
+            <input type="submit" button type="button" class="btn btn-dark" value="Run">
           </span>
         </div>
+
+        <!-- Process Table -->
         <div>
           <table class="table table-hover" id="table">
             <thead>
@@ -78,17 +80,17 @@
               {% endfor %}
             </tbody>
           </table>
-          <input type="submit" button type="button" class="btn btn-dark" value="제출">
-          <!-- <input type="submit" value="제출"> -->
+
       </form>
     </div>
     </main>
   </div>
 </div>
-
-<!--  나중에 js파일 따로 만들때 테스트 할 거 -->
-<!-- <button onclick="alert_button('안녕하세요!')"> 인사하세요! </button> -->
+<!-- 간트차트 -->
 <div>
+  <h2>Gantt Chart</h2>
+</div>
+<div class="GanttChart">
   <table class="table table-hover" id="table">
     <thead>
       <th></th>
@@ -100,11 +102,12 @@
       {% for processor in memory %}
       <tr>
         <th>#Processor{{forloop.counter}}</th>
-        {% for process in processor%}
-        {% if process != None %}
-        <td class="Time{{forloop.counter}}" style="visibility: hidden;">P{{process}}</td>
+        {% for process in processor %}
+        {% if process.0 != None %}
+        <td class="Time{{forloop.counter}}" style="visibility: hidden; background-color: {{process.1}} ">P{{process.0}}
+        </td>
         {% else %}
-        <td class="Time{{forloop.counter}}" style="visibility: visible;"></td>
+        <td class="Time{{forloop.counter}}" style="visibility: visible; background-color:ghostwhite"></td>
         {% endif %}
         {% endfor %}
       </tr>
@@ -112,94 +115,22 @@
     </tbody>
   </table>
 
+  <!-- 간트차트 테이블 생성 JS -->
   <script>
     var col = Number("{{memory|length}}");
-    // var time = Number("{{memory.0|length}}");
+    var time_limit = Number("{{memory.0|length}}");
     localStorage.setItem("time", 1);
 
-    setInterval(function(){
-      for(var j = 0; j < col; j++){
-        console.log(localStorage.time);
-      var value = document.getElementsByClassName("Time" + String(localStorage.time))[j]
-      value.style.visibility = "visible";
+    let chart = setInterval(function () {
+      for (var j = 0; j < col; j++) {
+        var value = document.getElementsByClassName("Time" + String(localStorage.time))[j]
+        value.style.visibility = "visible";
       }
       localStorage.time = Number(localStorage.time) + 1;
-    },1000);
+      if (time_limit < Number(localStorage.time)) {
+        clearInterval(chart)
+      }
+    }, 100);
   </script>
 </div>
-<!-- JS  -->
-
-<!-- 테이블 추가,삭제 -->
-<script>
-  localStorage.setItem("count", 6);
-  var full_count = 15;
-  var count = localStorage.count;
-
-  function addRow() {
-
-    if (Number(localStorage.count) > full_count) {
-      alert("최대15개까지만 가능합니다.");
-      return;
-    }
-
-    var add_cell1 = "<b>" + Number(localStorage.count) + "</b>";
-    var add_cell2 =
-      '<input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" >';
-    var add_cell3 =
-      '<input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time">';
-    var add_cell4 = "<label>-</label>";
-    var add_cell5 = "<label>-</label>";
-    var add_cell6 = "<label>-</label>";
-
-
-    var table_name = document.getElementById("table");
-
-    var new_row = table_name.insertRow();
-
-    var new_cell1 = new_row.insertCell();
-    var new_cell2 = new_row.insertCell();
-    var new_cell3 = new_row.insertCell();
-    var new_cell4 = new_row.insertCell();
-    var new_cell5 = new_row.insertCell();
-    var new_cell6 = new_row.insertCell();
-
-    new_cell1.innerHTML = add_cell1;
-    new_cell2.innerHTML = add_cell2;
-    new_cell3.innerHTML = add_cell3;
-    new_cell4.innerHTML = add_cell4;
-    new_cell5.innerHTML = add_cell5;
-    new_cell6.innerHTML = add_cell6;
-
-    localStorage.count = Number(localStorage.count) + 1;
-  }
-
-  function deleteRow() {
-    var table = document.getElementById("table");
-
-    if (table.rows.length < 3) {
-      alert("더이상 삭제할수 없습니다.");
-      return;
-    }
-
-    table.deleteRow(table.rows.length - 1);
-    localStorage.count = Number(localStorage.count) - 1;
-  }
-</script>
-
-
-<!-- TimeQuantum 보이기 숨기기 -->
-<script>
-  function showTimeQuantum(e) {
-    const type = e.options[e.selectedIndex].text;
-
-    if (type.indexOf('RR') != 0) {
-      document.getElementById('col-xs-2').style.visibility = "hidden";
-    } else {
-      document.getElementById('col-xs-2').style.visibility = "visible";
-    }
-
-  }
-</script>
-
-
 {% endblock %}

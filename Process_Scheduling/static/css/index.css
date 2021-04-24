@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&family=Ubuntu:wght@300&display=swap');
+
 body{
+    background-color: ghostwhite;
     text-align: center;
     margin: 100px 80px;
     padding: auto;
+    font-family: 'Ubuntu', 'Nanum Gothic Coding',sans-serif;
 }
 
 .main{
@@ -25,6 +30,8 @@ body{
 
 h2{
     text-align: center;
+    padding-top: 5%;
+    margin: 1%;
 }
 
 span{
@@ -48,29 +55,18 @@ span{
     width: 100%;
 }
 
-#cpu1{
-    padding: 5px;
-    margin: 5px;
+.GanttChart{
+    padding: 1%;
+    display: block;
+    overflow: auto;
+    margin-left: 13%;
+    margin-right: 13%;
 }
-#cpu2{
-    padding: 5px;
-    margin: 5px;
-}
-#cpu3{
-    padding: 5px;
-    margin: 5px;
-}
-#cpu4{
-    padding: 5px;
-    margin: 5px;
-}
+
 #type{
     float: left;
 }
 #pNum{
     float: left;
-
-}
-#cntlBT{
 
 }
