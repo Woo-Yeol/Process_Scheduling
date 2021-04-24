@@ -256,7 +256,6 @@ class FCFS:
 
         p_memory = []
         for processor in self.processor_ls:
-            print(processor.processor_memory)
             p_memory.append(processor.processor_memory)
 
         return (result,p_memory)    
@@ -305,7 +304,6 @@ class RR:
 
         p_memory = []
         for processor in self.processor_ls:
-            print(processor.processor_memory)
             p_memory.append(processor.processor_memory)
 
         return (result,p_memory)    
@@ -347,7 +345,6 @@ class SPN:
 
         p_memory = []
         for processor in self.processor_ls:
-            print(processor.processor_memory)
             p_memory.append(processor.processor_memory)
 
         return (result,p_memory)    
@@ -422,7 +419,6 @@ class SRTN:
 
         p_memory = []
         for processor in self.processor_ls:
-            print(processor.processor_memory)
             p_memory.append(processor.processor_memory)
 
         return (result,p_memory)    
@@ -459,14 +455,11 @@ class HRRN:
         result = []
         for process in self.process_ls:
             result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])
-
         p_memory = []
         for processor in self.processor_ls:
-            print(processor.processor_memory)
             p_memory.append(processor.processor_memory)
 
         return (result,p_memory)    
-
 # RR Scheduling Class 생성
 class DTRR:
     # 생성자
@@ -513,11 +506,7 @@ class DTRR:
         result = []
         for process in self.process_ls:
             result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])
-
         p_memory = []
         for processor in self.processor_ls:
-            print(processor.processor_memory)
             p_memory.append(processor.processor_memory)
-
-        print("context_switch : ", context_switch)
         return (result,p_memory)    

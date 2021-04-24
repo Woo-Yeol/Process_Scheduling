@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&family=Ubuntu:wght@300&display=swap');
+
 body{
+    background-color: ghostwhite;
     text-align: center;
     margin: 100px 80px;
     padding: auto;
+    font-family: 'Ubuntu', 'Nanum Gothic Coding',sans-serif;
 }
 
 .main{
@@ -69,8 +74,5 @@ span{
 }
 #pNum{
     float: left;
-
-}
-#cntlBT{
 
 }
