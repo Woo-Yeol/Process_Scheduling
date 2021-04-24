@@ -1,15 +1,16 @@
 from django.db import models
+
+# 랜덤한 우선순위를 설정하기 위한 random import
 import random
 
+# 우선순위를 선정하기 위한 변수
 HIGH = 1
 MEDIUM = 2
 LOW = 3
 priority = [HIGH, MEDIUM, LOW]
-global context_switch; context_switch = 0
 
-# # Create your models here.
 
-# Python list를 이용한 PriorityQueue ADT 구현.
+# Python list를 이용한 Queue ADT 구현.
 class ReadyQueue:
     # 생성자
     def __init__(self):
@@ -40,19 +41,22 @@ class ReadyQueue:
         for process in process_ls:
             if (process.at == time): self.enqueue(process)
 
+# Python list를 이용하여 ReadyQueue를 상속받아 PriorityQueue ADT 구현
 class PriorityReadyQueue(ReadyQueue):
-
+    # dequeue 연산 오버라이딩
     def dequeue(self):
         highest = self.findMaxIndex()
         if highest is not None:
             return self.items.pop(highest)
-    # peek 연산
+    # peek 연산 오버라이딩
     def peek(self):
         highest = self.findMaxIndex()
         if highest is not None:
             return self.items[highest]
 
+# Python list를 이용하여 PriorityQueue 상속받아 SPN 알고리즘의 구현을 위한 SPNPriorityQueue ADT 구현
 class SPNPriorityReadyQueue(PriorityReadyQueue):
+    # 우선순위를 검색하는 findmaxIndex 오버라이딩
     def findMaxIndex(self):
         if self.isEmpty(): return None
         else:
@@ -62,7 +66,9 @@ class SPNPriorityReadyQueue(PriorityReadyQueue):
                     highest = i  # 인덱스 갱신
             return highest
 
+# Python list를 이용하여 PriorityReadyQueue 상속받아 SRTN 알고리즘의 구현을 위한 SRTNPriorityQueue ADT 구현
 class SRTNPriorityReadyQueue(PriorityReadyQueue):
+    # 우선순위를 검색하는 findmaxIndex 오버라이딩
     def findMaxIndex(self):  # 최대 우선순위 항목의 인덱스 반환
         if self.isEmpty(): return None
         else:
@@ -73,8 +79,10 @@ class SRTNPriorityReadyQueue(PriorityReadyQueue):
                 elif self.items[i].bt == self.items[highest].bt:  # 만약 resetTime이 같으면 먼저 온게 가장 높은 우선순위
                     if self.items[i].at < self.items[highest].at: highest = i
             return highest
-
+            
+# Python list를 이용하여 PriorityReadyQueue 상속받아 HRRN 알고리즘의 구현을 위한 HRRNPriorityQueue ADT 구현
 class HRRNPriorityReadyQueue(PriorityReadyQueue):
+    # 우선순위를 검색하는 findmaxIndex 오버라이딩
     def findMaxIndex(self):
         if self.isEmpty(): return None
         else:
@@ -84,6 +92,7 @@ class HRRNPriorityReadyQueue(PriorityReadyQueue):
                     highest = i  # 인덱스 갱신
             return highest
 
+# Python list를 이용하여 ReadyQueue 상속받아 DTRR 알고리즘의 구현을 위한 DTRRPriorityQueue 구현
 class DTRRReadyQueue(ReadyQueue):
     def __init__(self):
         self.items = []
@@ -105,8 +114,9 @@ class DTRRReadyQueue(ReadyQueue):
 
         self.d_tq = round(self.save_bt / self.save_n)  # 누적 평균 계산
 
-# Process Class Declair
+# Process Class 선언
 class Process:
+    # 프로세스의 속성을 정의
     def __init__(self, bt, at, n,tq=0):
         self.bt = int(bt)  # Process Burst Time
         self.rbt = int(bt)  # Process Burst Time 기억용
@@ -119,23 +129,26 @@ class Process:
         self.r_tq = int(tq)  # Process Time Quantum 기억용
         self.ratio = 0
         self.is_new = True
+        # DTRR 알고리즘을 위한 우선순위 속성을 랜덤하게 확인한다.
         self.priority = random.choice(priority)
+
+    # 프로세스 정보 설정
+    def modify_process(self, time):
+        self.tt = time - self.at
+        self.ntt = round(self.tt / self.rbt, 2)
+        self.wt = self.tt - self.rbt  # processor의 process
+
+    # HRRN 알고리즘을 위한 ratio 계산식
+    def calc_ratio(self):
+        self.ratio = (self.rbt + self.wt) / self.rbt
 
     def __str__(self):
         return "#Process" + str(self.id) + " AT = " + str(self.at) + " BT = " + str(self.bt) + " TT = " + str(
             self.tt) + " NTT = " + str(self.ntt) + " WT = " + str(self.wt)
 
-    def modify_process(self, time):
-        # 프로세서에서 처리가 완료된 프로세스 제거 및 프로세스 정보 설정
-        self.tt = time - self.at
-        self.ntt = round(self.tt / self.rbt, 2)
-        self.wt = self.tt - self.rbt  # processor의 process
-
-    def calc_ratio(self):
-        self.ratio = (self.rbt + self.wt) / self.rbt
-
-# Processor Class Declair
+# Processor Class 선언
 class Processor:
+    # 프로세서의 속성을 정의
     def __init__(self):
         self.running = False
         self.process = None
@@ -151,13 +164,15 @@ class Processor:
                 self.process = readyQue.dequeue()
                 self.running = True
 
+    # 프로세스를 실행한다 -> Burst Time을 1초 감소시킨다.
     def running_process(self, time):
-        # 프로세서에 어떤 프로세스가 실행되었는지 기록한다.
+        # 프로세서에 어떤 프로세스가 실행되었는지 기록한다. -> 간트차트의 구현을 위한 정보 기록
         if self.process == None:
             self.processor_memory.append(None)
         else:
             self.processor_memory.append(self.process.id)
 
+        # 실행중인 프로세스의 Burst Time을 1초 감소시킨다.
         if self.running == True:
             self.process.bt -= 1
             # 프로세스 처리가 완료된 프로세스 상태 변경
@@ -170,6 +185,7 @@ class Processor:
                 return 1
         return 0
 
+    # RR 알고리즘 구현을 위한 프로세스 진행 시간을 확인하고 자원을 회수한다.
     def time_progress(self, readyQue):
         if self.running == True:
             self.process.tq -= 1
@@ -179,8 +195,8 @@ class Processor:
                 readyQue.enqueue(self.process)  # 자원을 반납한 프로세스는 큐의 맨 뒤에서 다시 대기
                 self.process = None  # 자원 반납 후 할당 해제
 
+    # DTRR 알고리즘의 가장 낮은 우선순위의 프로세스의 진행시간을 확인하고 자원을 회수한다.
     def time_progress_Lpriority(self, readyQue):
-        global context_switch
         if self.running == True:
             self.process.tq += 1
 
@@ -190,10 +206,9 @@ class Processor:
                 self.process.is_new = False
                 readyQue.enqueue(self.process)  # 자원을 반납한 프로세스는 큐의 맨 뒤에서 다시 대기
                 self.process = None  # 자원 반납 후 할당 해제
-                context_switch += 1
 
+    # DTRR 알고리즘의 중간 순위의 프로세스의 진행시간을 확인하고 자원을 회수한다.
     def time_progress_Mpriority(self, readyQue):
-        global context_switch
         if self.running == True:
             self.process.tq += 1
 
@@ -203,10 +218,9 @@ class Processor:
                 self.process.is_new = False
                 readyQue.enqueue(self.process)  # 자원을 반납한 프로세스는 큐의 맨 뒤에서 다시 대기
                 self.process = None  # 자원 반납 후 할당 해제
-                context_switch += 1
 
+    # DTRR 알고리즘의 중간 순위의 프로세스의 진행시간을 확인하고 자원을 회수한다.
     def time_progress_Hpriority(self, readyQue):
-        global context_switch
         if self.running == True:
             self.process.tq += 1
 
@@ -216,7 +230,6 @@ class Processor:
                 self.process.is_new = False
                 readyQue.enqueue(self.process)  # 자원을 반납한 프로세스는 큐의 맨 뒤에서 다시 대기
                 self.process = None  # 자원 반납 후 할당 해제
-                context_switch += 1
 
 # FCFS Scheduling Class 생성
 class FCFS:
@@ -252,14 +265,13 @@ class FCFS:
         # 출력
         result = []
         for process in self.process_ls:
-            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])
-
+            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])   # 실행이 종료된 프로세스의 속성을 값을 저장한 리스트
         p_memory = []
-        for processor in self.processor_ls:
-            p_memory.append(processor.processor_memory)
-
+        for processor in self.processor_ls:     
+            p_memory.append(processor.processor_memory)                                     # 프로세서의 로그가 저장된 리스트
         return (result,p_memory)    
 
+# RR Scheduling Class 생성
 class RR:
     # 생성자
     def __init__(self, input_value, time_quantum):
@@ -300,14 +312,13 @@ class RR:
         # 출력
         result = []
         for process in self.process_ls:
-            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])
-
+            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])   # 실행이 종료된 프로세스의 속성을 값을 저장한 리스트
         p_memory = []
-        for processor in self.processor_ls:
-            p_memory.append(processor.processor_memory)
+        for processor in self.processor_ls:     
+            p_memory.append(processor.processor_memory)                                     # 프로세서의 로그가 저장된 리스트
+        return (result,p_memory)      
 
-        return (result,p_memory)    
-
+# SPN Scheduling Class 생성
 class SPN:
     # 생성자
     def __init__(self, input_value):
@@ -341,14 +352,13 @@ class SPN:
         # 출력
         result = []
         for process in self.process_ls:
-            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])
-
+            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])   # 실행이 종료된 프로세스의 속성을 값을 저장한 리스트
         p_memory = []
-        for processor in self.processor_ls:
-            p_memory.append(processor.processor_memory)
+        for processor in self.processor_ls:     
+            p_memory.append(processor.processor_memory)                                     # 프로세서의 로그가 저장된 리스트
+        return (result,p_memory)     
 
-        return (result,p_memory)    
-
+# SRTN Scheduling Class 생성
 class SRTN:
     # 생성자
     def __init__(self, input_value):
@@ -377,6 +387,7 @@ class SRTN:
         else:
             return False
 
+    # 모든 프로세스의 RT를 확인하여 실행해야할 프로세스의 리스트를 만들고 이를 통해 확인된 프로세스를 자원 회수의 횟수가 가장 적은 방향으로 교환을 진행한다.
     def check_rbt(self,time):
         checkQue = SRTNPriorityReadyQueue()
         for i in range(len(self.process_ls)):  # cpu에 들어갈 후보 선출 (cpu안에 있는애들 + readyque에 있는애들)
@@ -398,7 +409,7 @@ class SRTN:
         for j in range(len(self.processor_ls)):
             self.processor_ls[j].lock = False
 
-    # SPN 멀티코어 프로세싱
+    # SRTN 멀티코어 프로세싱
     def multicore_processing(self):
         time = 0;
         terminate = 0
@@ -415,14 +426,13 @@ class SRTN:
         # 출력
         result = []
         for process in self.process_ls:
-            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])
-
+            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])   # 실행이 종료된 프로세스의 속성을 값을 저장한 리스트
         p_memory = []
-        for processor in self.processor_ls:
-            p_memory.append(processor.processor_memory)
-
+        for processor in self.processor_ls:     
+            p_memory.append(processor.processor_memory)                                     # 프로세서의 로그가 저장된 리스트
         return (result,p_memory)    
 
+# HRRN Scheduling Class 생성
 class HRRN:
     def __init__(self, input_value):
         self.process_ls = []
@@ -440,9 +450,10 @@ class HRRN:
         for n in range(self.processor_n):
             self.processor_ls.append(Processor())
 
+    # HRRN멀티코어 프로세싱
     def multicore_processing(self):
-        time = 0;
-        terminate = 0
+        time = 0; terminate = 0
+        
         while (terminate != self.process_n):
             self.readyQueue.readyQue(self.process_ls, time)
             time += 1
@@ -454,13 +465,13 @@ class HRRN:
         # 출력
         result = []
         for process in self.process_ls:
-            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])
+            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])   # 실행이 종료된 프로세스의 속성을 값을 저장한 리스트
         p_memory = []
-        for processor in self.processor_ls:
-            p_memory.append(processor.processor_memory)
-
+        for processor in self.processor_ls:     
+            p_memory.append(processor.processor_memory)                                     # 프로세서의 로그가 저장된 리스트
         return (result,p_memory)    
-# RR Scheduling Class 생성
+
+# DTRR Scheduling Class 생성
 class DTRR:
     # 생성자
     def __init__(self, input_value):
@@ -505,8 +516,8 @@ class DTRR:
         # 출력
         result = []
         for process in self.process_ls:
-            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])
+            result.append([process.at, process.rbt, process.wt, process.tt, process.ntt])   # 실행이 종료된 프로세스의 속성을 값을 저장한 리스트
         p_memory = []
-        for processor in self.processor_ls:
-            p_memory.append(processor.processor_memory)
-        return (result,p_memory)    
+        for processor in self.processor_ls:     
+            p_memory.append(processor.processor_memory)                                     # 프로세서의 로그가 저장된 리스트
+        return (result,p_memory)     

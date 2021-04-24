@@ -1,8 +1,9 @@
-// 테이블 추가,삭제
+// 프로세스의 전체 갯수 제한을 위한 변수
 localStorage.setItem("count", 6);
 var full_count = 15;
 var count = localStorage.count;
 
+// 테이블에 프로세스 추가
 function addRow() {
 
     if (Number(localStorage.count) > full_count) {
@@ -41,6 +42,7 @@ function addRow() {
     localStorage.count = Number(localStorage.count) + 1;
 }
 
+// 테이블의 프로세스 삭제
 function deleteRow() {
     var table = document.getElementById("table");
 

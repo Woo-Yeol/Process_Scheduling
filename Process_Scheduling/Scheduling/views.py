@@ -1,7 +1,8 @@
 from django.shortcuts import render
+# model로 선언한 클래스들의 객체 생성을 위한 import
 from .models import Process,Processor,SPN,FCFS,RR,SRTN,HRRN,DTRR
 
-# Create your views here.
+# Page가 로드될 때 실행할 함수 선언
 def index(request):
     # 초기화면을 위한 result 초기화
     result = [['0','3','-','-','-'],
@@ -15,7 +16,6 @@ def index(request):
         # 잘못된 입력값이 아닐경우
         if not request.POST["Burst_time"] == "":
             # 알맞은 알고리즘을 선택하고 프로세스 처리 결과를 저장한다.
-            print(request.POST)
             result = choose_scheduling_type(request)
             result, memory = result[0], choose_color(result[1])
             # 결과값으로 Render하기
@@ -23,6 +23,7 @@ def index(request):
     # 값이 입력되지 않았다면 초기 result 값을 Render한다.
     return render(request, 'index.html',{'results':result})
 
+# Switch-Case문이 없는 Python의 특성상 하드 코딩을 통한 색상 지정
 def choose_color(memory):
     color=["#f85a40", "#fbb034", "#ffdd00", "#c1d82f", "#00a4e4", "#6a67ce", "#fc636b",'#8a7967', '#6a737b', '#b4a996', '#c9c3e6','#f7afff','#d1de3f', '#f58268', '#8b8b64', '#87a6bc']
     for processor in range(len(memory)):
@@ -60,7 +61,7 @@ def choose_color(memory):
     return memory
             
 
-# 입력받은 값을 파이썬의 자료구조로 가공한다.
+# POST로 입력받은 값을 파이썬의 자료구조로 가공
 def input_value(request):
     return [
         len(request.POST.getlist("Burst_time")),

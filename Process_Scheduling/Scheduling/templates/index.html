@@ -1,8 +1,13 @@
+<!-- 템플릿을 사용하여 base.html을 상속받아 페이지를 구성한다. -->
 {% extends 'base.html' %}
+
+<!-- Static 파일을 load -->
 {% load static %}
 
+<!-- body 태그의 내용 -->
 {% block content %}
 <link rel="stylesheet" href={% static "css/index.css" %}>
+
 <div class="container-fluid">
   <div class="main">
     <div class="main-up">
@@ -66,7 +71,7 @@
             </thead>
 
             <tbody>
-              <!-- Table을 Template 언어를 사용한 반복문으로 생성하기 -->
+              <!-- 프로세스 입력값을 가지는 테이블을 Template 언어를 사용한 반복문으로 생성하기 -->
               {% for result in results %}
               <tr class="quantum_td">
                 <th scope="row">{{forloop.counter}}</th>
@@ -81,29 +86,34 @@
               {% endfor %}
             </tbody>
           </table>
-
       </form>
     </div>
     </main>
   </div>
 </div>
-<!-- 간트차트 -->
+
+<!-- Gantt Chart -->
 <div>
   <h2>Gantt Chart</h2>
 </div>
+
+<!-- HTML의 Table과 템플릿 언어를 사용하여 간트차트 구현 -->
 <div class="GanttChart">
   <table class="table table-hover" id="table">
     <thead>
       <th></th>
+      <!-- 행에 초를 표시한다. -->
       {% for process in memory.0 %}
       <th class>{{forloop.counter}}</th>
       {% endfor %}
     </thead>
     <tbody>
+      <!-- 열에 실행이 가능한 프로세스를 나열한다. -->
       {% for processor in memory %}
       <tr>
         <th>#Processor{{forloop.counter}}</th>
         {% for process in processor %}
+        <!-- 입력받은 데이터를 통하여 프로세스를 시간에 따라 해당 프로세서에 표시한다. -->
         {% if process.0 != None %}
         <td class="Time{{forloop.counter}}" style="visibility: hidden; background-color: {{process.1}} ">P{{process.0}}
         </td>
@@ -118,10 +128,12 @@
 
   <!-- 간트차트 테이블 생성 JS -->
   <script>
+    
     var col = Number("{{memory|length}}");
     var time_limit = Number("{{memory.0|length}}");
     localStorage.setItem("time", 1);
 
+    // setInterval 함수를 통한 초마다 각 프로세서의 프로세스 상태를 출력한다.
     let chart = setInterval(function () {
       for (var j = 0; j < col; j++) {
         var value = document.getElementsByClassName("Time" + String(localStorage.time))[j]
@@ -131,7 +143,7 @@
       if (time_limit < Number(localStorage.time)) {
         clearInterval(chart)
       }
-    }, 100);
+    }, 300);
   </script>
 </div>
 {% endblock %}
