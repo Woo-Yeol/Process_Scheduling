@@ -15,20 +15,13 @@
 
         <div class="select">
           <span id="type">
-<<<<<<< HEAD
             <label for="scheduling-type"">SCHEDULING TYPE</label>
             <select class=" scheduling-type" name="scheduling-type" aria-label=".scheduling-type" id="scheduling-type">
-=======
-            <label>SCHEDULING TYPE</label>
-            <select id="scheduling-type" name="scheduling-type" aria-label=".scheduling-type"
-              onchange="showTimeQuantum(this)">
->>>>>>> 41f6fa001fb5381a52ba6f6102bcfc7c7044a88f
               <option value="FCFS">FCFS</option>
               <option value="RR">RR</option>
               <option value="SPN">SPN</option>
               <option value="SRTN">SRTN</option>
               <option value="HRRN">HRRN</option>
-<<<<<<< HEAD
               <option value="DTRR">DTRN</option>
               </select>
           </span>
@@ -37,22 +30,11 @@
               <label for="processor-number">&nbsp; PROCESSOR NUMBER</label>
               <select class="processor-number" name="processor-number" aria-label=".processor-number"
                 onchange="numCpu(this)" id="processor-number">
-=======
-            </select>
-            <div id="selectType"></div>
-          </span>
-          <tr>&emsp;
-            <span id="pNum">
-              <label>&nbsp; PROCESSOR NUMBER</label>
-              <select id="processor-number" name="processor-number" aria-label=".processor-number"
-                onchange="selectCpuNum(this)">
->>>>>>> 41f6fa001fb5381a52ba6f6102bcfc7c7044a88f
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
               </select>
-<<<<<<< HEAD
             </span>
             <select name="" id="">
               <option value=""></option>
@@ -65,19 +47,6 @@
           <span id="cntlBT">
             <button type="button" class="btn btn-success" value="add" onclick="addRow()">Add</button>
             <button type="button" class="btn btn-warning" value="delete" onclick="deleteRow()">Delete</button>
-=======
-              <div id="num"></div>
-            </span>
-
-          <tr></tr>
-          <span id="col-xs-2" style="visibility:hidden">
-            <label>TimeQuantum</label>
-            <input type="text" placeholder="TimeQuantum">
-          </span>
-          <span id="cntlBT">
-            <button type="button" class="btn btn-success" value="add" onclick="addRow()">Add</button>
-            <button type="button" class="btn btn-warning" value="delete" onclick="deleteRow()">delete</button>
->>>>>>> 41f6fa001fb5381a52ba6f6102bcfc7c7044a88f
           </span>
         </div>
         <div>
