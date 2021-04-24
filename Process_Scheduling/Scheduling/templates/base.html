@@ -61,14 +61,26 @@
     }
   </style>
 
+  <nav class="navbar fixed-top navbar navbar-expand-lg navbar-light bg-light">
+  {% comment %} <ul class="navbar-nav ml-auto"> {% endcomment %}
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="#">운영체제</a>
+        <a class="nav-link" href="#">3조</a>
+        <a class="nav-link" href="#">임우열</a>
+        <a class="nav-link" href="#">임지수</a>
+        <a class="nav-link" href="#">이유호</a>
+        <a class="nav-link" href="#">배수빈</a>
+      </div>
+    </div>
+  </nav>
 
   <!-- Custom styles for this template -->
   <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+  
 </head>
 
 <body>
-  <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  </header>
   {% block content %}
   {% endblock %}
 
@@ -83,4 +95,7 @@
   <script src="dashboard.js"></script>
 </body>
 
+  <footer style="text-align:center">
+<p>© 2021. Operating System Team3. Inc.All rights reserved  </p>
+</footer>
 </html>
