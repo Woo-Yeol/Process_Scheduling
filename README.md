@@ -8,6 +8,8 @@
 
 ## 🖥 Project Example
 
+<img src="./Process_Scheduling.gif" width='500px'>
+
 ## 💡 구현 요소 - Process Scheduling
 
 - FCFS(First Come First Service)
@@ -15,10 +17,14 @@
 - SPN(Shortest Process Next)
 - SRTN(Shortest Remaining Time Next)
 - HRRN(High Response Ratio Next)
+- DTRR(Dynamic TimeQuantum Round-Robin)
 
 ## 🧱 기술 스택
 
-- Django/python
+- AWS / EC2 / ubuntu : 배포 서버
+- Django/python : Web FrameWork / BackEnd
+- Nginx : Django App 8000포트 -> Web 80포트로 전환
+- JavaScript / HTML5 / CSS : FrontEnd
 
 ## 📖  사용법
 
@@ -33,4 +39,7 @@
 - `pip install -r requirements.txt`
 
 ## ⚙️ 로컬 서버 실행
+- `python manage.py collectstatic`
+- `python manage.py makemigrations`
+- `python manage.py migrate`
 - `python manage.py runserver`
