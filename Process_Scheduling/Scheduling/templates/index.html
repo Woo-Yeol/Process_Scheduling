@@ -15,7 +15,8 @@
         <div class="select">
           <span id="type">
             <label>SCHEDULING TYPE</label>
-            <select id="scheduling-type" name="scheduling-type" aria-label=".scheduling-type" onchange="showTimeQuantum(this)">
+            <select id="scheduling-type" name="scheduling-type" aria-label=".scheduling-type"
+              onchange="showTimeQuantum(this)">
               <option value="FCFS">FCFS</option>
               <option value="RR">RR</option>
               <option value="SPN">SPN</option>
@@ -141,6 +142,7 @@
 </div>
 
 
+
 <!-- JS  -->
 
 <!-- 테이블 추가,삭제 -->
@@ -232,12 +234,12 @@
 
 <!-- TimeQuantum 보이기 숨기기 -->
 <script>
-  function showTimeQuantum(e){
+  function showTimeQuantum(e) {
     const type = e.options[e.selectedIndex].text;
 
-    if(type.indexOf('RR')!=0){
+    if (type.indexOf('RR') != 0) {
       document.getElementById('col-xs-2').style.visibility = "hidden";
-    }else{
+    } else {
       document.getElementById('col-xs-2').style.visibility = "visible";
     }
 
@@ -260,38 +262,39 @@
     //var selectValue = select.options[select.selectedIndex].value;
     //console.log(selectValue);
 
-      switch (Number(num)) {
-        case 1:
-          cpu1.style.display = '';
-          cpu2.style.display = "none";
-          cpu3.style.display = "none";
-          cpu4.style.display = "none";
+    switch (Number(num)) {
+      case 1:
+        cpu1.style.display = '';
+        cpu2.style.display = "none";
+        cpu3.style.display = "none";
+        cpu4.style.display = "none";
 
-          break;
-        case 2:
-          cpu1.style.display = '';
-          cpu2.style.display = '';
-          cpu3.style.display = "none";
-          cpu4.style.display = "none";
+        break;
+      case 2:
+        cpu1.style.display = '';
+        cpu2.style.display = '';
+        cpu3.style.display = "none";
+        cpu4.style.display = "none";
 
-          break;
-        case 3:
-          cpu1.style.display = '';
-          cpu2.style.display = '';
-          cpu3.style.display = '';
-          cpu4.style.display = "none";
+        break;
+      case 3:
+        cpu1.style.display = '';
+        cpu2.style.display = '';
+        cpu3.style.display = '';
+        cpu4.style.display = "none";
 
 
-          break;
-        case 4:
-          cpu1.style.display = '';
-          cpu2.style.display = '';
-          cpu3.style.display = '';
-          cpu4.style.display = '';
-          break;
-      }
+        break;
+      case 4:
+        cpu1.style.display = '';
+        cpu2.style.display = '';
+        cpu3.style.display = '';
+        cpu4.style.display = '';
+        break;
+    }
 
   }
 </script>
+
 
 {% endblock %}
