@@ -30,6 +30,8 @@ body{
 
 h2{
     text-align: center;
+    padding-top: 5%;
+    margin: 1%;
 }
 
 span{
@@ -53,22 +55,14 @@ span{
     width: 100%;
 }
 
-#cpu1{
-    padding: 5px;
-    margin: 5px;
+.GanttChart{
+    padding: 1%;
+    display: block;
+    overflow: auto;
+    margin-left: 13%;
+    margin-right: 13%;
 }
-#cpu2{
-    padding: 5px;
-    margin: 5px;
-}
-#cpu3{
-    padding: 5px;
-    margin: 5px;
-}
-#cpu4{
-    padding: 5px;
-    margin: 5px;
-}
+
 #type{
     float: left;
 }
