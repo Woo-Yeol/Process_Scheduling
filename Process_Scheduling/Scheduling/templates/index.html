@@ -16,7 +16,7 @@
         <div class="select">
           <span id="type">
             <label for="scheduling-type"">SCHEDULING TYPE</label>
-            <select class=" scheduling-type" name="scheduling-type" aria-label=".scheduling-type" id="scheduling-type">
+            <select class=" scheduling-type" name="scheduling-type" aria-label=".scheduling-type" id="scheduling-type" onchange="showTimeQuantum(this)">
               <option value="FCFS">FCFS</option>
               <option value="RR">RR</option>
               <option value="SPN">SPN</option>
@@ -38,9 +38,10 @@
             </span>
             <!-- TimeQuantum 입력폼  -->
           <tr></tr>
+
           <span id="col-xs-2" style="visibility:hidden">
-            <label>TimeQuantum</label>
-            <input type="text" placeholder="TimeQuantum" name="TimeQuantum" id="TimeQuantum">
+            <label for="TimeQuantum">TimeQuantum</label>
+            <input type="text" placeholder="TimeQuantum" name="TimeQuantum" id="TimeQuantum" class="TimeQuantum">
           </span>
 
           <span id="cntlBT">
