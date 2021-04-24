@@ -22,6 +22,17 @@ def index(request):
     # 값이 입력되지 않았다면 초기 result 값을 Render한다.
     return render(request, 'index.html',{'results':result})
 
+# # 프로세서별로 기록된 프로세스들의 정보를 초를 단위를 기준으로 재정렬한다.
+# def data_resize(memory):
+#     result = []
+#     for x in range(len(memory[0])):
+#         temp = []
+#         for y in range(len(memory)):
+#             temp.extend(memory[y][x])
+#         result.append(temp)
+#     return result
+            
+
 # 입력받은 값을 파이썬의 자료구조로 가공한다.
 def input_value(request):
     return [

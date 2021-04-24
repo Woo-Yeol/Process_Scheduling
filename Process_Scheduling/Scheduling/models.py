@@ -71,7 +71,7 @@ class SRTNPriorityReadyQueue(PriorityReadyQueue):
                 if self.items[i].bt < self.items[highest].bt:  # rest Time이 가장 낮으면 가장 높은 우선순위
                     highest = i  # 인덱스 갱신
                 elif self.items[i].bt == self.items[highest].bt:  # 만약 resetTime이 같으면 먼저 온게 가장 높은 우선순위
-                    highest = self.items[i].at if self.items[i].at < self.items[highest].at else self.items[highest].at
+                    if self.items[i].at < self.items[highest].at: highest = i
             return highest
 
 class HRRNPriorityReadyQueue(PriorityReadyQueue):
