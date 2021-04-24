@@ -15,6 +15,7 @@ def index(request):
         # 잘못된 입력값이 아닐경우
         if not request.POST["Burst_time"] == "":
             # 알맞은 알고리즘을 선택하고 프로세스 처리 결과를 저장한다.
+            print(request.POST)
             result = choose_scheduling_type(request)
             result, memory = result[0], choose_color(result[1])
             # 결과값으로 Render하기

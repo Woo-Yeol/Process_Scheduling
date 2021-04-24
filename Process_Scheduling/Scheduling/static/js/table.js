@@ -12,7 +12,7 @@ function addRow() {
 
     var add_cell1 = "<b>" + Number(localStorage.count) + "</b>";
     var add_cell2 =
-        '<input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" >';
+        '<input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" value="0">';
     var add_cell3 =
         '<input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time">';
     var add_cell4 = "<label>-</label>";
