@@ -4,7 +4,7 @@
 <link rel="stylesheet" href={% static "css/index.css" %}>
 <link href={% static "table.js" %}>
 
-<!-- <div class="container-fluid"> -->
+<div class="container-fluid">
   <div class="main">
     <div class="main-up">
       <form action="" method="post">
@@ -54,7 +54,7 @@
           </span>
         </div>
 
-        <!-- 프로세서 정보 테이블 -->
+        <!-- Process Table -->
         <div>
           <table class="table table-hover" id="table">
             <thead>
@@ -90,7 +90,8 @@
     </main>
   </div>
 </div>
-
+  
+<!-- 간트차트 -->
 <div>
   <h2>Gantt Chart</h2>
 </div>
@@ -118,25 +119,26 @@
       </tbody>
     </table>
 
-
-  <script>
-    var col = Number("{{memory|length}}");
-    // var time = Number("{{memory.0|length}}");
-    localStorage.setItem("time", 1);
-
-    setInterval(function(){
-      for(var j = 0; j < col; j++){
-        console.log(localStorage.time);
-      var value = document.getElementsByClassName("Time" + String(localStorage.time))[j]
-      value.style.visibility = "visible";
-      }
-      localStorage.time = Number(localStorage.time) + 1;
-    },1000);
-  </script>
-</div>
 <!-- JS  -->
 
-<!-- 테이블 추가,삭제 -->
+<!-- 간트차트 테이블 생성 -->
+<script>
+  var col = Number("{{memory|length}}");
+  // var time = Number("{{memory.0|length}}");
+  localStorage.setItem("time", 1);
+
+  setInterval(function(){
+    for(var j = 0; j < col; j++){
+      console.log(localStorage.time);
+    var value = document.getElementsByClassName("Time" + String(localStorage.time))[j]
+    value.style.visibility = "visible";
+    }
+    localStorage.time = Number(localStorage.time) + 1;
+  },1000);
+</script>
+</div>
+
+<!-- Process 추가,삭제 -->
 <script>
   localStorage.setItem("count", 6);
   var full_count = 15;
@@ -207,6 +209,5 @@
 
   }
 </script>
-
 
 {% endblock %}
