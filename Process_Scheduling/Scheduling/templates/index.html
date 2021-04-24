@@ -3,6 +3,7 @@
 {% block content %}
 <link rel="stylesheet" href={% static "css/index.css" %}>
 <link href={% static "table.js" %}>
+
 <div class="container-fluid">
   <div class="main">
     <div class="main-up">
@@ -14,14 +15,29 @@
 
         <div class="select">
           <span id="type">
+<<<<<<< HEAD
+            <label for="scheduling-type"">SCHEDULING TYPE</label>
+            <select class=" scheduling-type" name="scheduling-type" aria-label=".scheduling-type" id="scheduling-type">
+=======
             <label>SCHEDULING TYPE</label>
             <select id="scheduling-type" name="scheduling-type" aria-label=".scheduling-type"
               onchange="showTimeQuantum(this)">
+>>>>>>> 41f6fa001fb5381a52ba6f6102bcfc7c7044a88f
               <option value="FCFS">FCFS</option>
               <option value="RR">RR</option>
               <option value="SPN">SPN</option>
               <option value="SRTN">SRTN</option>
               <option value="HRRN">HRRN</option>
+<<<<<<< HEAD
+              <option value="DTRR">DTRN</option>
+              </select>
+          </span>
+          <tr>&emsp;
+            <span id="pNum">
+              <label for="processor-number">&nbsp; PROCESSOR NUMBER</label>
+              <select class="processor-number" name="processor-number" aria-label=".processor-number"
+                onchange="numCpu(this)" id="processor-number">
+=======
             </select>
             <div id="selectType"></div>
           </span>
@@ -30,11 +46,26 @@
               <label>&nbsp; PROCESSOR NUMBER</label>
               <select id="processor-number" name="processor-number" aria-label=".processor-number"
                 onchange="selectCpuNum(this)">
+>>>>>>> 41f6fa001fb5381a52ba6f6102bcfc7c7044a88f
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
               </select>
+<<<<<<< HEAD
+            </span>
+            <select name="" id="">
+              <option value=""></option>
+            </select>
+          <tr></tr>
+          <span id="col-xs-2">
+            <label for="TimeQuantum">TimeQuantum</label>
+            <input type="text" placeholder="TimeQuantum" name="TimeQuantum" id="TimeQuantum">
+          </span>
+          <span id="cntlBT">
+            <button type="button" class="btn btn-success" value="add" onclick="addRow()">Add</button>
+            <button type="button" class="btn btn-warning" value="delete" onclick="deleteRow()">Delete</button>
+=======
               <div id="num"></div>
             </span>
 
@@ -46,6 +77,7 @@
           <span id="cntlBT">
             <button type="button" class="btn btn-success" value="add" onclick="addRow()">Add</button>
             <button type="button" class="btn btn-warning" value="delete" onclick="deleteRow()">delete</button>
+>>>>>>> 41f6fa001fb5381a52ba6f6102bcfc7c7044a88f
           </span>
         </div>
         <div>
@@ -62,6 +94,7 @@
             </thead>
 
             <tbody>
+              <!-- Table을 Template 언어를 사용한 반복문으로 생성하기 -->
               {% for result in results %}
               <tr class="quantum_td">
                 <th scope="row">{{forloop.counter}}</th>
@@ -84,65 +117,47 @@
   </div>
 </div>
 
-<!-- 나중에 js파일 따로 만들때 테스트 할 거 -->
+<!--  나중에 js파일 따로 만들때 테스트 할 거 -->
 <!-- <button onclick="alert_button('안녕하세요!')"> 인사하세요! </button> -->
+<div>
+  <table class="table table-hover" id="table">
+    <thead>
+      <th></th>
+      {% for process in memory.0 %}
+      <th class>{{forloop.counter}}</th>
+      {% endfor %}
+    </thead>
+    <tbody>
+      {% for processor in memory %}
+      <tr>
+        <th>#Processor{{forloop.counter}}</th>
+        {% for process in processor%}
+        {% if process != None %}
+        <td class="Time{{forloop.counter}}" style="visibility: hidden;">P{{process}}</td>
+        {% else %}
+        <td class="Time{{forloop.counter}}" style="visibility: visible;"></td>
+        {% endif %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-<div class="bar">
-  <div class="s-bar">
-    <p>초</p>
+  <script>
+    var col = Number("{{memory|length}}");
+    // var time = Number("{{memory.0|length}}");
+    localStorage.setItem("time", 1);
 
-    <div class="progress" style="height: 2px;">
-      <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0"
-        aria-valuemax="100"></div>
-    </div>
-  </div>
-
-  <div class="mainBar">
-    <div id="cpu1">
-      <div class="progress" name="cpu1" style="height: 50px;">
-        <div class="progress-bar" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0"
-          aria-valuemax="100"></div>
-        <div class="progress-bar bg-success" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0"
-          aria-valuemax="100"></div>
-        <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0"
-          aria-valuemax="100"></div>
-      </div>
-    </div>
-    <div id="cpu2">
-      <div class="progress" name="cpu2" style="height: 50px;">
-        <div class="progress-bar" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0"
-          aria-valuemax="100"></div>
-        <div class="progress-bar bg-success" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0"
-          aria-valuemax="100"></div>
-        <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0"
-          aria-valuemax="100"></div>
-      </div>
-    </div>
-    <div id="cpu3">
-      <div class="progress" name="cpu3" style="height: 50px;">
-        <div class="progress-bar" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0"
-          aria-valuemax="100"></div>
-        <div class="progress-bar bg-success" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0"
-          aria-valuemax="100"></div>
-        <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0"
-          aria-valuemax="100"></div>
-      </div>
-    </div>
-    <div id="cpu4">
-      <div class="progress" name="cpu4" style="height: 50px;">
-        <div class="progress-bar" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0"
-          aria-valuemax="100"></div>
-        <div class="progress-bar bg-success" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0"
-          aria-valuemax="100"></div>
-        <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0"
-          aria-valuemax="100"></div>
-      </div>
-    </div>
-  </div>
+    setInterval(function(){
+      for(var j = 0; j < col; j++){
+        console.log(localStorage.time);
+      var value = document.getElementsByClassName("Time" + String(localStorage.time))[j]
+      value.style.visibility = "visible";
+      }
+      localStorage.time = Number(localStorage.time) + 1;
+    },1000);
+  </script>
 </div>
-
-
-
 <!-- JS  -->
 
 <!-- 테이블 추가,삭제 -->
@@ -150,35 +165,6 @@
   localStorage.setItem("count", 6);
   var full_count = 15;
   var count = localStorage.count;
-
-  function addRow() {
-
-    if (Number(localStorage.count) > full_count) {
-      alert("최대15개까지만 가능합니다.");
-      return;
-    }
-
-    var add_cell1 = "<b>" + Number(localStorage.count) + "</b>";
-    var add_cell2 =
-      '<input type="text" class="form-control" placeholder="Arrive Time" aria-label="Arrive Time" name="Arrive_time" >';
-    var add_cell3 =
-      '<input type="text" class="form-control" placeholder="Burst Time" aria-label="Burst Time" name="Burst_time"';
-    var add_cell4 = "<label>-</label>";
-    var add_cell5 = "<label>-</label>";
-    var add_cell6 = "<label>-</label>";
-
-
-    var table_name = document.getElementById("table");
-
-    var new_row = table_name.insertRow();
-
-    var new_cell = [];
-    for (var i = 1; i < 6; i++) {
-      new_cell[i] = new_row.insertCell();
-      new_cell[i].innerHTML = add_cell[i];
-    }
-    localStorage.count = Number(localStorage.count) + 1;
-  }
 
   function addRow() {
 
@@ -241,56 +227,6 @@
       document.getElementById('col-xs-2').style.visibility = "hidden";
     } else {
       document.getElementById('col-xs-2').style.visibility = "visible";
-    }
-
-  }
-</script>
-
-<!-- cpu 수 조절하기 -->
-<script>
-  function selectCpuNum(e) {
-    //선택한 cpu 수
-    const num = e.options[e.selectedIndex].text;
-
-    const cpu1 = document.getElementById('cpu1');
-    const cpu2 = document.getElementById('cpu2');
-    const cpu3 = document.getElementById('cpu3');
-    const cpu4 = document.getElementById('cpu4');
-
-    //var select = document.getElementById("processor-number");
-    //console.log(select);
-    //var selectValue = select.options[select.selectedIndex].value;
-    //console.log(selectValue);
-
-    switch (Number(num)) {
-      case 1:
-        cpu1.style.display = '';
-        cpu2.style.display = "none";
-        cpu3.style.display = "none";
-        cpu4.style.display = "none";
-
-        break;
-      case 2:
-        cpu1.style.display = '';
-        cpu2.style.display = '';
-        cpu3.style.display = "none";
-        cpu4.style.display = "none";
-
-        break;
-      case 3:
-        cpu1.style.display = '';
-        cpu2.style.display = '';
-        cpu3.style.display = '';
-        cpu4.style.display = "none";
-
-
-        break;
-      case 4:
-        cpu1.style.display = '';
-        cpu2.style.display = '';
-        cpu3.style.display = '';
-        cpu4.style.display = '';
-        break;
     }
 
   }
