@@ -57,7 +57,7 @@ def choose_color(memory):
             elif memory[processor][process] == 14:
                 memory[processor][process] = (14,color[13])
             elif memory[processor][process] == 15:
-                memory[processor][process] = (15,color[0])
+                memory[processor][process] = (15,color[14])
     return memory
             
 # POST로 입력받은 값을 파이썬의 자료구조로 가공
