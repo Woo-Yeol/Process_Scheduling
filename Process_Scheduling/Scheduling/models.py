@@ -492,7 +492,7 @@ class HRRN:
         for n in range(self.processor_n):
             self.processor_ls.append(Processor())
 
-    def mulitcore_processing(self):
+    def multicore_processing(self):
         time = 0;
         terminate = 0
         while terminate != self.process_n:
