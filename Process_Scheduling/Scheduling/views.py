@@ -60,7 +60,6 @@ def choose_color(memory):
                 memory[processor][process] = (15,color[0])
     return memory
             
-
 # POST로 입력받은 값을 파이썬의 자료구조로 가공
 def input_value(request):
     return [
