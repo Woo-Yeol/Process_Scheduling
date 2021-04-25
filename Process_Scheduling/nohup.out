@@ -1,0 +1,12 @@
+Watching for file changes with StatReloader
+[25/Apr/2021 10:12:12] "GET / HTTP/1.0" 200 8888
+[25/Apr/2021 10:13:13] "POST / HTTP/1.0" 200 50579
+/home/ubuntu/Process_Scheduling/Process_Scheduling/Scheduling/views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 25, 2021 - 10:12:04
+Django version 3.1.7, using settings 'Process_Scheduling.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+Watching for file changes with StatReloader
