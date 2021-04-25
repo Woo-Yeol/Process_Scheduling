@@ -514,6 +514,7 @@ class HRRN:
         # tt 및 ntt 계산
             process.tt = process.rbt + process.wt
             process.ntt = round(process.tt / process.rbt, 2)
+            
         # 출력
         result = []
         for process in self.process_ls:
