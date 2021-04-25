@@ -25,7 +25,7 @@ def index(request):
 
 # Switch-Case문이 없는 Python의 특성상 하드 코딩을 통한 색상 지정
 def choose_color(memory):
-    color=["#f85a40", "#fbb034", "#ffdd00", "#c1d82f", "#00a4e4", "#6a67ce", "#fc636b",'#8a7967', '#6a737b', '#b4a996', '#c9c3e6','#f7afff','#d1de3f', '#f58268', '#8b8b64', '#03DAC6']
+    color=["#f85a40", "#fbb034", "#ffdd00", "#c1d82f", "#00a4e4", "#6a67ce", "#4CAF50",'#8a7967', '#6a737b', '#b4a996', '#c9c3e6','#f7afff','#d1de3f', '#f58268', '#00B8D4', '#03DAC6']
     for processor in range(len(memory)):
         for process in range(len(memory[processor])):
             if memory[processor][process] == 1:

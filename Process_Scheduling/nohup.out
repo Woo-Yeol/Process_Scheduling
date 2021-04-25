@@ -10,3 +10,4 @@ Django version 3.1.7, using settings 'Process_Scheduling.settings'
 Starting development server at http://0.0.0.0:8000/
 Quit the server with CONTROL-C.
 Watching for file changes with StatReloader
+[25/Apr/2021 10:18:07] "POST / HTTP/1.0" 200 50579
