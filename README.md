@@ -22,6 +22,12 @@
 - HRRN(High Response Ratio Next)
 - DTRR(Dynamic TimeQuantum Round-Robin)
 
+
+## 📖 코드 구성
+
+- `Process_Scheduling/Scheduling/models.py` : 모든 클래스 구성
+- `Process_Scheduling/Scheduling/views.py` : 실행 함수 선언
+
 ## 🧱 기술 스택
 
 - AWS / EC2 / ubuntu : 배포 서버
@@ -42,7 +48,6 @@
 - `pip install -r requirements.txt`
 
 ## ⚙️ 로컬 서버 실행
-- `python manage.py collectstatic`
 - `python manage.py makemigrations`
 - `python manage.py migrate`
 - `python manage.py runserver`
