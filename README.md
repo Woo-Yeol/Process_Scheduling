@@ -1,7 +1,7 @@
 # 💻 Process_Scheduling 
 
 ## 👏 URL
-**[Process_Scheduling](http://processscheduling.kro.kr)**
+~~[Process_Scheduling](http://processscheduling.kro.kr)~~(배포 중단)
 
 ## 🛠 제작자
  - 17학번 임우열
